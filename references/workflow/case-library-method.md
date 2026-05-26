@@ -44,6 +44,15 @@ Use this source to benchmark a specific screen or state: login, search, empty st
 
 Use this source for app discovery, category breadth, recent visual examples, and product-positioning cues across consumer app types.
 
+### Meiye Inspiration Album
+
+- URL: https://www.meiye.art/InspirationAlbum
+- Public categories observed: APP, web, operations, poster, illustration, logo, typography, packaging, icon, and others.
+- APP inspiration categories observed: general pages, popups, cards, membership, operations UI, music, social, finance, image/video, ecommerce, food delivery, sports, education, news, transportation, travel, reading, live/video, healthcare, smart life, automotive, and other mobile categories.
+- Function albums observed: home, profile, App Store promo, loading animation, launch/splash, onboarding, privacy agreement, permissions, login/register, search, empty state, publish/create, share, filters, comments, image detail, status prompt, form, message list, category selection, bottom popup, settings, chat, map, calendar, identity verification, membership center, finance home, image/video editing, food delivery, shopping cart, healthcare, education, news, fitness, social messaging, travel, ecommerce, dark mode, and data visualization.
+
+Use this source for visual-category cues: mood, density, card rhythm, media treatment, dark/light tone, and category-specific composition. Do not copy exact artwork, screenshots, or brand layouts.
+
 ## Access Limits
 
 - Public pages can expose categories, metadata, and some examples.
@@ -76,6 +85,31 @@ Use this source for app discovery, category breadth, recent visual examples, and
    - Produce a screen inventory, navigation map, component inventory, state list, token notes, and open risks.
    - Cite the source category or benchmark type, not copied visuals.
 
+## Mandatory Pre-Design Synthesis
+
+Run this before producing high-fidelity design images, visual mockups, or Figma output.
+
+1. **UI Notes Pin pass**: choose function/component categories for the requested flow.
+   - AI retouch example: image/video editing, photo/scan, dark mode, slider, toolbar, bottom sheet, export, loading, permission denied.
+   - Food delivery example: food delivery, search, filter, restaurant detail, cart, coupons, payment, order status, empty states.
+   - Fitness example: health/fitness, data statistics, timeline, progress bar, cards, check-in, reminders.
+2. **Meiye Inspiration pass**: choose visual albums that match the industry and screen mood.
+   - AI retouch example: image/video, dark mode, cards, general pages.
+   - Food delivery example: food delivery, ecommerce, cards, operations UI.
+   - Fitness example: sports, healthcare, data visualization, cards.
+3. **Pattern extraction**:
+   - IA: entry points, tabs, stack depth, core action placement.
+   - Components: card/list/grid, toolbar, bottom nav, bottom sheet, slider, forms, dialogs.
+   - Imagery: hero/canvas/thumbnail/background role and crop behavior.
+   - Visual rhythm: density, typography, dark/light tone, icon weight, spacing.
+   - State coverage: loading, empty, error, permissions, success, export/payment/order states.
+4. **Design filter**:
+   - Keep what matches the user's industry and platform.
+   - Adapt what matches the task but needs a different size, density, or brand tone.
+   - Reject copied compositions, proprietary assets, growth tricks, inaccessible contrast, and web/desktop visual habits.
+
+If live access is blocked, use the known taxonomy above and say the pass is taxonomy-based rather than screenshot-reviewed.
+
 ## Product-Style Reading Guide
 
 - Finance and medical: trust, confirmation, risk/privacy disclosure, secure forms, exact error recovery.
@@ -90,6 +124,8 @@ Use this source for app discovery, category breadth, recent visual examples, and
 When case research is needed, include:
 
 - Benchmark scope: UI Notes industry category, target platform, and 3-5 reference types.
+- UI Notes Pin categories selected and why.
+- Meiye Inspiration Album categories selected and why.
 - Function matrix: screens/states being researched.
 - Pattern extraction: IA, interaction, components, visual language.
 - Design decision: keep/adapt/reject notes.

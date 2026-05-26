@@ -12,6 +12,7 @@ Use this skill when a user asks for mobile app page design, mobile UI rules, des
 ## Capability Summary
 
 - Infer the app's industry before styling. Use UI Notes `/app` categories as the primary taxonomy, then choose the mobile style that fits the industry's task, trust level, content density, and business action.
+- Before producing high-fidelity design images or Figma output, run a case-library synthesis using UI Notes `/pin` for function/component patterns and Meiye Inspiration Album for visual-category cues. Extract patterns; do not copy screenshots.
 - Turn user-provided prototypes, wireframes, screenshots, or rough ideas into polished mobile visual designs while preserving the original information architecture and core workflow.
 - Produce high-fidelity mobile design images when the user asks for "设计图", "高保真", "视觉稿", "mockup", or "出图"; do not answer with text-only specs in those cases.
 - Use an Image-first route for visual quality: generate one standard phone-size screen per image, then convert or rebuild into Figma for handoff and editability when tools are available.
@@ -44,18 +45,22 @@ Use this skill when a user asks for mobile app page design, mobile UI rules, des
    - **Super-app / mini-program style**: prioritize familiar host-app mobile patterns, fast task completion, and service-entry efficiency.
 8. Choose the industry-fit visual style: density, color/material posture, imagery/media role, motion intensity, and component emphasis.
 9. Build a benchmark set: choose 3-5 comparable apps from the same industry, 2-4 key flows, and the specific function/component patterns to inspect.
-10. Map industry to screen and component patterns, then design from information architecture outward: navigation, page hierarchy, core actions, feedback, empty/error/loading states, then visual styling.
-11. Select the output screen size before generating or rebuilding: preserve user-provided prototype ratio when present; otherwise choose an iOS, Android, mini-program/H5, or cross-platform logical frame from `screen-size-selection.md`.
-12. If the design needs polished photos, illustrations, covers, thumbnails, empty states, or generated-result examples, create a visual asset inventory and generate/source bitmap assets instead of using placeholder boxes or generic CSS shapes. Decide each image's composition role before placing it: full-bleed background, immersive hero, card thumbnail, content image, cutout, or decorative support.
-13. If the user asks for a design image, visual mockup, high-fidelity screen, Figma frame, or "设计图", produce a direct visual artifact rather than only a text spec. Default fidelity route: generate standard phone-size Image screens first, then write or rebuild them into Figma when design handoff/editability is needed. Use HTML only for interactive preview or implementation.
-14. When Figma is requested after image generation, create a pixel-fidelity conversion plan before drawing: original screen size, Figma frame size, locked reference image, movable bitmap crop map, editable component taxonomy, text/icon/vector layer plan, script template choices, and verification screenshot target.
-15. When Figma is requested, check whether write tools are available before promising direct file output. If available, create or update the Figma file with frames, images, components, and annotations. If unavailable, create a Figma-ready import package with full-size PNG screens, an SVG board, and a concise import spec.
-16. In Figma, keep the approved raster screen as a locked reference beside the work frame or on a separate reference page, but make the deliverable phone frame visible as a componentized editable reconstruction. The final visible screen must not be a single full-screen bitmap.
-17. Assemble the visible frame from movable materials: cropped bitmap assets for photos/generated results, editable text for labels and copy, vector/icon layers for glyphs, and component instances for repeated UI. If a complex media area cannot be redrawn faithfully, keep that region as its own movable bitmap asset, not as part of a flattened full-screen screenshot.
-18. Use the Figma script templates when helpful: create the editable phone skeleton, seed repeated components, place movable bitmap crops, and return layer metadata that proves the screen is not flattened.
-19. Compare the Figma screenshot with the approved image after each major region: media crop, card background, text hierarchy, icon placement, charts, tab bar, and safe areas. Fix drift before claiming 1:1.
-20. Validate against mobile constraints and pixel fidelity: reachability, touch targets, small-screen clipping, keyboard behavior, scroll rhythm, accessibility, dark mode, large text, asset loading, image/text overlap, standard phone aspect ratio, movable/editable Figma layers, and visual match to the approved image.
-21. Return concrete specs: inferred industry classification, industry-fit style rationale, selected screen size and rationale, secondary task model, page structure, component inventory, asset inventory, token recommendations, interaction states, benchmark-derived rationale, standard phone-size visual artifact when requested, Figma output or import package path when applicable, and review checklist.
+10. For any request that asks for design images, high fidelity, visual mockups, or Figma, run the UI Notes Pin + Meiye Inspiration Album synthesis before drawing:
+   - UI Notes `/pin`: choose function/component categories that match the required screens and states.
+   - Meiye Inspiration Album: choose APP visual-category cues that match the industry and mood.
+   - Output the extracted pattern notes: IA, component choices, imagery role, density, visual rhythm, and rejected patterns.
+11. Map industry to screen and component patterns, then design from information architecture outward: navigation, page hierarchy, core actions, feedback, empty/error/loading states, then visual styling.
+12. Select the output screen size before generating or rebuilding: preserve user-provided prototype ratio when present; otherwise choose an iOS, Android, mini-program/H5, or cross-platform logical frame from `screen-size-selection.md`.
+13. If the design needs polished photos, illustrations, covers, thumbnails, empty states, or generated-result examples, create a visual asset inventory and generate/source bitmap assets instead of using placeholder boxes or generic CSS shapes. Decide each image's composition role before placing it: full-bleed background, immersive hero, card thumbnail, content image, cutout, or decorative support.
+14. If the user asks for a design image, visual mockup, high-fidelity screen, Figma frame, or "设计图", produce a direct visual artifact rather than only a text spec. Default fidelity route: generate standard phone-size Image screens first, then write or rebuild them into Figma when design handoff/editability is needed. Use HTML only for interactive preview or implementation.
+15. When Figma is requested after image generation, create a pixel-fidelity conversion plan before drawing: original screen size, Figma frame size, locked reference image, movable bitmap crop map, editable component taxonomy, text/icon/vector layer plan, script template choices, and verification screenshot target.
+16. When Figma is requested, check whether write tools are available before promising direct file output. If available, create or update the Figma file with frames, images, components, and annotations. If unavailable, create a Figma-ready import package with full-size PNG screens, an SVG board, and a concise import spec.
+17. In Figma, keep the approved raster screen as a locked reference beside the work frame or on a separate reference page, but make the deliverable phone frame visible as a componentized editable reconstruction. The final visible screen must not be a single full-screen bitmap.
+18. Assemble the visible frame from movable materials: cropped bitmap assets for photos/generated results, editable text for labels and copy, vector/icon layers for glyphs, and component instances for repeated UI. If a complex media area cannot be redrawn faithfully, keep that region as its own movable bitmap asset, not as part of a flattened full-screen screenshot.
+19. Use the Figma script templates when helpful: create the editable phone skeleton, seed repeated components, place movable bitmap crops, and return layer metadata that proves the screen is not flattened.
+20. Compare the Figma screenshot with the approved image after each major region: media crop, card background, text hierarchy, icon placement, charts, tab bar, and safe areas. Fix drift before claiming 1:1.
+21. Validate against mobile constraints and pixel fidelity: reachability, touch targets, small-screen clipping, keyboard behavior, scroll rhythm, accessibility, dark mode, large text, asset loading, image/text overlap, standard phone aspect ratio, movable/editable Figma layers, and visual match to the approved image.
+22. Return concrete specs: inferred industry classification, industry-fit style rationale, case-library synthesis notes, selected screen size and rationale, secondary task model, page structure, component inventory, asset inventory, token recommendations, interaction states, benchmark-derived rationale, standard phone-size visual artifact when requested, Figma output or import package path when applicable, and review checklist.
 
 ## Baseline Principles
 
@@ -95,6 +100,7 @@ When designing a screen or flow, provide:
 - Prototype interpretation and preserved structure, when a prototype is provided.
 - Inferred UI Notes industry category, evidence from the user's description, secondary task model, and style rationale.
 - Benchmark set and extracted mobile patterns.
+- Case-library synthesis from UI Notes Pin function/component categories and Meiye Inspiration Album visual categories when the request includes design images, high fidelity, or Figma.
 - Screen hierarchy and navigation model.
 - Component list with states.
 - Visual asset inventory, generated/sourced image plan, and image composition rules when imagery is needed.

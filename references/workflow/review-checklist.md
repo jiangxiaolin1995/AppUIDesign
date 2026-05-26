@@ -12,6 +12,8 @@ Use this before presenting a mobile app UI design as ready.
 - The visual style follows the inferred industry's needs for trust, speed, density, media richness, or task focus.
 - Any secondary task model is documented, such as transaction, content feed, creation/editing, social exchange, utility lookup, habit loop, booking, or high-trust data entry.
 - The benchmark set matches the industry instead of copying unrelated popular apps.
+- For design image, high-fidelity, visual mockup, or Figma requests, UI Notes Pin function/component categories and Meiye Inspiration Album visual categories were selected before drawing.
+- The output states what was extracted from those sources: IA, components, imagery role, density, visual rhythm, and rejected patterns.
 - Function-level references were checked for the screens that carry risk, such as onboarding, search, pay, posting, chat, empty states, settings, and permissions.
 - The primary user goal is visible within the first screen.
 - The primary action is visually clear and reachable.

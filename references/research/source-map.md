@@ -239,6 +239,12 @@ Use as a function and component pattern source. The public page currently shows 
 
 Use as an app-discovery and category-breadth source. Public pages expose mobile app categories including AI, transportation, meditation, Google apps, photo/video editing, ecommerce, habit building, fitness, food delivery, reading, notes/planning, social/communication, finance, healthcare, live/video, news, music/entertainment, tickets, tools, education, real estate/rental, sports, interest communities, travel/hotel, and food/health. Ignore the web screenshot channel unless the user asks for web design.
 
+### Meiye Inspiration Album
+
+- Meiye Inspiration Album: https://www.meiye.art/InspirationAlbum
+
+Use as a mobile visual-category inspiration source. Public pages expose APP albums and mobile function/style albums such as home, profile, launch, onboarding, privacy agreement, permissions, login, search, empty state, publish, share, filter, comments, image detail, form, chat, map, membership, finance home, image/video editing, food delivery, shopping cart, healthcare, education, news, fitness, social, travel, ecommerce, dark mode, cards, and data visualization. Treat it as pattern inspiration, not a screenshot-copy source.
+
 ## Research Gaps To Recheck
 
 - Meta/Facebook does not appear to publish a current general-purpose mobile UI design guideline comparable to Apple HIG or Material. Treat public Meta material as product/process evidence.
