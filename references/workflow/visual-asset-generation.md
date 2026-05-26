@@ -85,13 +85,15 @@ When a raster screen is later converted to Figma, preserve bitmap regions instea
 - Reuse original generated/source images whenever possible.
 - If only the full screen image exists, crop the needed photo/media areas from that screen and upload those crops as separate Figma image fills.
 - Match the original crop, focal point, scale mode, corner radius, scrim, and overlay treatment.
+- Follow `image-crop-spec.md` for crop roles, names, platform sizes, and quality checks.
 - Keep text, controls, charts, and cards editable as Figma layers above or around the bitmap fills.
 - Build a component kit for repeated UI before final assembly: cards, buttons, chips, tabs, metric cells, list rows, bottom bars, toolbars, editor controls, and chart modules.
+- Use `figma-script-templates.md` when direct Figma automation is available.
 - For photo-heavy sections, a bitmap-backed movable container is the correct outcome; generic vector silhouettes are only acceptable for intentionally illustrative placeholders.
 - Keep the full raster screen as a locked reference in Figma until screenshot verification is complete.
 - Do not use the locked full-screen source image as the final visible screen. It is a reference, not the deliverable.
 - The deliverable frame must be assembled from editable components, editable text/vector layers, and separate movable bitmap crops.
-- If the final screenshot differs materially from the approved raster image, revise the Figma file or clearly label the output as an editable reinterpretation rather than a faithful conversion.
+- Run `visual-diff-check.md` before final handoff. If the final screenshot differs materially from the approved raster image, revise the Figma file or clearly label the output as an editable reinterpretation rather than a faithful conversion.
 
 ## Prompt Rules
 

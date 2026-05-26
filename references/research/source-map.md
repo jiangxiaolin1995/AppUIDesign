@@ -17,9 +17,11 @@ Use for native iOS expectations: hierarchy, harmony with system UI, Dynamic Type
 ### Google / Android / Material
 
 - Android mobile UI design: https://developer.android.com/design/ui/mobile
+- Android adaptive mobile layout: https://developer.android.com/design/ui/mobile/guides/layout-and-content/adapt-layout
 - Android touch target size: https://support.google.com/accessibility/android/answer/7101858
 - Material Design 3: https://m3.material.io/
 - Material accessibility: https://m2.material.io/design/usability/accessibility.html
+- Material 3 minimum interactive component size: https://developer.android.com/reference/kotlin/androidx/compose/material3/minimumInteractiveComponentSize.modifier
 - Material bottom navigation: https://m2.material.io/components/bottom-navigation/ios
 - Android window size classes: https://developer.android.com/develop/ui/compose/layouts/adaptive/use-window-size-classes
 
@@ -195,6 +197,7 @@ Use for large-business mobile consistency: standard color palettes, icon librari
 ### JD.com
 
 - JD Retail Design Language: https://jdrdl.jd.com/Home.html
+- JD Retail operation color: https://jdrdl.jd.com/Design-Operation-color.html
 - NutUI mobile component library: https://nutui.jd.com/
 - JD mini-program cross-platform standard design deck: https://www.w3.org/2021/03/miniapp-cjk/slides/standard-design-jd.pdf
 

@@ -63,6 +63,8 @@ Use this before presenting a mobile app UI design as ready.
 ## Visual And Content
 
 - The chosen fidelity route matches the request: Image first for visual design, Figma for editable design handoff, HTML for interaction/implementation.
+- The selected phone size is justified by prototype ratio, target platform, product type, or delivery container.
+- Platform/company references are used as constraints for size, density, safe area, touch target, crop, and component consistency; they are not copied as visual style unless requested.
 - Raster design images use a standard vertical phone aspect ratio, not square/landscape/collage output.
 - Multi-screen raster output keeps each screen at full readable phone size; overview boards are supplemental only.
 - The design image is the actual app screen unless a device-frame presentation was requested.
@@ -91,8 +93,18 @@ Use this before presenting a mobile app UI design as ready.
 - Repeated UI is abstracted into components or reusable grouped patterns: navigation, tab bars, cards, buttons, chips, metric modules, charts, toolbars, and list rows.
 - Photo, food, product, portrait, canvas, and generated-result regions reuse original assets or crops as independent movable bitmap nodes with correct crop, radius, scrim, and focal point.
 - No flattened full-screen screenshot is presented as the editable Figma design.
+- Figma script templates were used or consciously matched for phone skeleton, component seeds, movable bitmap crops, and metadata audit when direct Figma automation is available.
 - A Figma screenshot has been compared with the approved image for layout, crop, color, spacing, typography hierarchy, icon placement, and mobile chrome.
 - Any region that remains bitmap-backed is named honestly and can still be moved, resized, or replaced as a separate layer.
+
+## Image Crop And Visual Diff
+
+- Every hero, canvas, thumbnail, avatar, product, food, generated-result, and background image has a named crop role.
+- Crops preserve source aspect ratio and focal point; no non-proportional stretch is visible.
+- Images that carry product appeal fill their intended container rather than sitting as small centered objects.
+- Text and controls over images have contrast protection.
+- The source image and Figma screenshot have a fidelity ledger covering size, safe areas, image crop, color mood, text hierarchy, component spacing, icons, and bottom controls.
+- The final handoff reports whether the result passed or needs revision.
 
 ## Accessibility
 
