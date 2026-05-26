@@ -1,0 +1,96 @@
+---
+name: mobile-app-ui-design
+description: Use when designing, reviewing, or improving mobile app UI and interaction specs or visual mockups for iOS, Android, mini programs, or cross-platform mobile apps, especially from user-provided prototypes, wireframes, sketches, or screenshots.
+metadata:
+  short-description: Mobile app UI design guidance
+---
+
+# Mobile App UI Design
+
+Use this skill when a user asks for mobile app page design, mobile UI rules, design review, interaction polish, component specs, or a reusable mobile design system.
+
+## Capability Summary
+
+- Infer the app's industry before styling. Use UI Notes `/app` categories as the primary taxonomy, then choose the mobile style that fits the industry's task, trust level, content density, and business action.
+- Turn user-provided prototypes, wireframes, screenshots, or rough ideas into polished mobile visual designs while preserving the original information architecture and core workflow.
+- Produce high-fidelity mobile design images when the user asks for "设计图", "高保真", "视觉稿", "mockup", or "出图"; do not answer with text-only specs in those cases.
+- Use an Image-first route for visual quality: generate one standard phone-size screen per image, then convert or rebuild into Figma for handoff and editability when tools are available.
+- When converting an approved image screen into Figma, treat that image as the pixel source of truth. The Figma result must visually match the image in layout, photos, crops, colors, spacing, and hierarchy before claiming it is a Figma version.
+- Use a pixel-faithful editable Figma structure by default after image generation: keep the full raster screen as a locked reference only, then rebuild the visible phone frame from movable Figma layers, cropped bitmap assets, editable text, vector shapes, and reusable components.
+- Keep every raster screen in a standard vertical phone ratio around `9:19.5`, such as `1179x2556`, `1290x2796`, or an equivalent high-resolution portrait. Do not compress several screens into one unreadable board as the only deliverable.
+- Generate or source polished bitmap imagery when the design needs hero photos, food/product cards, fitness scenes, before/after editing results, covers, thumbnails, empty states, or illustrations.
+- Place imagery with intent: use full-bleed, hero, card thumbnail, content image, cutout, or decorative roles with proper cover/crop/focal point/scrim treatment. Avoid small centered images when a section or screen should be visually filled.
+- In editable Figma output, every visible material must be independently movable or selectable: text as text layers, cards/buttons/charts/navigation as editable components, icons as vectors/components, and photos/media as separate cropped bitmap nodes. Do not paste one full-screen screenshot as the final visible design.
+- Build an editable component kit before or alongside the Figma reconstruction. Use it to assemble repeated cards, tabs, buttons, metric modules, chart blocks, toolbars, and bottom navigation while matching the approved image 1:1.
+- Write to Figma directly when the Figma tools are exposed (`create_new_file`, `use_figma`, `upload_assets`, or equivalent). If Figma write tools are unavailable, create a Figma-ready import package with PNG assets, SVG board, and handoff specs.
+- Use HTML only when the user needs an interaction preview or implementation target; HTML is not the default medium for static mobile design稿.
+- For cross-industry apps, keep the UI Notes industry as the primary decision and use abstract archetypes only as secondary task models, such as transaction, content feed, creation/editing, habit loop, booking, or high-trust data entry.
+
+## Core Workflow
+
+1. Identify the target surface: iOS, Android, mini program, React Native, Flutter, or cross-platform mobile app. Treat H5-in-mobile sources only as mobile interaction references; ignore desktop or website styling unless the user explicitly asks for it.
+2. If the user provides a prototype, wireframe, sketch, screenshot, or Figma frame, treat it as the structural source of truth. Preserve its intended workflow and information architecture unless mobile usability requires a change.
+3. Clarify product context: user goal, primary workflow, content density, platform constraints, brand tone, and business risk.
+4. Infer the UI Notes industry category from the user's product description and prototype before choosing visuals. Do this even when the user does not name an industry. Use the user's main daily task as the deciding signal, then choose the industry-appropriate mobile style.
+5. Match one primary UI Notes industry category: 报刊杂志、财务、参考、导航、工具、购物、健康健美、教育、旅游、美食佳饮、商务、社交、摄影与录像、生活、体育、天气、图书、图形和设计、效率、新闻、医疗、音乐、娱乐.
+6. Add a secondary task model only when needed: transaction, content feed, creation/editing, social exchange, utility lookup, habit loop, booking, or high-trust data entry.
+7. Choose the design posture:
+   - **Native-first**: follow Apple HIG or Android/Material conventions closely.
+   - **Brand system with platform adaptation**: shared brand tokens, platform-specific navigation and controls.
+   - **Super-app / mini-program style**: prioritize familiar host-app mobile patterns, fast task completion, and service-entry efficiency.
+8. Choose the industry-fit visual style: density, color/material posture, imagery/media role, motion intensity, and component emphasis.
+9. Build a benchmark set: choose 3-5 comparable apps from the same industry, 2-4 key flows, and the specific function/component patterns to inspect.
+10. Map industry to screen and component patterns, then design from information architecture outward: navigation, page hierarchy, core actions, feedback, empty/error/loading states, then visual styling.
+11. If the design needs polished photos, illustrations, covers, thumbnails, empty states, or generated-result examples, create a visual asset inventory and generate/source bitmap assets instead of using placeholder boxes or generic CSS shapes. Decide each image's composition role before placing it: full-bleed background, immersive hero, card thumbnail, content image, cutout, or decorative support.
+12. If the user asks for a design image, visual mockup, high-fidelity screen, Figma frame, or "设计图", produce a direct visual artifact rather than only a text spec. Default fidelity route: generate standard phone-size Image screens first, then write or rebuild them into Figma when design handoff/editability is needed. Use HTML only for interactive preview or implementation.
+13. When Figma is requested after image generation, create a pixel-fidelity conversion plan before drawing: original screen size, Figma frame size, locked reference image, movable bitmap crop map, editable component taxonomy, text/icon/vector layer plan, and verification screenshot target.
+14. When Figma is requested, check whether write tools are available before promising direct file output. If available, create or update the Figma file with frames, images, components, and annotations. If unavailable, create a Figma-ready import package with full-size PNG screens, an SVG board, and a concise import spec.
+15. In Figma, keep the approved raster screen as a locked reference beside the work frame or on a separate reference page, but make the deliverable phone frame visible as a componentized editable reconstruction. The final visible screen must not be a single full-screen bitmap.
+16. Assemble the visible frame from movable materials: cropped bitmap assets for photos/generated results, editable text for labels and copy, vector/icon layers for glyphs, and component instances for repeated UI. If a complex media area cannot be redrawn faithfully, keep that region as its own movable bitmap asset, not as part of a flattened full-screen screenshot.
+17. Compare the Figma screenshot with the approved image after each major region: media crop, card background, text hierarchy, icon placement, charts, tab bar, and safe areas. Fix drift before claiming 1:1.
+18. Validate against mobile constraints and pixel fidelity: reachability, touch targets, small-screen clipping, keyboard behavior, scroll rhythm, accessibility, dark mode, large text, asset loading, image/text overlap, standard phone aspect ratio, movable/editable Figma layers, and visual match to the approved image.
+19. Return concrete specs: inferred industry classification, industry-fit style rationale, secondary task model, page structure, component inventory, asset inventory, token recommendations, interaction states, benchmark-derived rationale, standard phone-size visual artifact when requested, Figma output or import package path when applicable, and review checklist.
+
+## Baseline Principles
+
+- Prefer platform familiarity over visual novelty for core navigation, forms, destructive actions, permissions, and system handoffs.
+- Make the primary task obvious within the first screen; avoid hiding the next action behind vague icons or decorative layouts.
+- Keep interaction targets comfortable: use at least `44x44pt` on iOS and `48x48dp` on Android as the default floor unless the platform-specific source says otherwise.
+- Separate visual size from hit area; icons may look smaller, but their tappable area must remain generous.
+- Put frequent actions where thumbs can reach them, especially on tall phones; keep high-risk actions separated and confirmed.
+- Use motion to explain state changes and continuity, not to decorate static content.
+- Treat accessibility as a design input: dynamic text, contrast, labels, focus order, screen readers, haptics/audio alternatives, and non-color status indicators.
+- Design loading, empty, offline, permission-denied, error, and success states before calling a screen complete.
+- For cross-platform apps, preserve functional consistency while adapting native controls, navigation, and system affordances per platform.
+- Do not apply desktop SaaS, dashboard, or website visual density to mobile apps unless the product is explicitly an enterprise/admin mobile app.
+
+## When To Load References
+
+- For source material and company-specific notes, read `references/research/source-map.md`.
+- For synthesized rules across Apple, Google, Meta/Facebook, Microsoft, Samsung, Alibaba/Ant, Tencent/WeChat, ByteDance, and Meituan, read `references/research/mobile-ui-principles.md`.
+- For user-provided prototypes, wireframes, sketches, screenshots, or requests for design images, read `references/workflow/prototype-to-visual-design.md`.
+- For UI Notes industry-based app type selection, read `references/industry/product-archetypes.md`.
+- For industry-fit visual style, read `references/industry/style-decision-guide.md`.
+- For AI-generated or sourced bitmap assets, read `references/workflow/visual-asset-generation.md`.
+- For mapping an industry to screen, function, and component patterns, read `references/industry/industry-to-pattern-map.md`.
+- For case-library research using UI Notes, Meiye, app screenshots, or competitor screenshots, read `references/workflow/case-library-method.md`.
+- For design review or acceptance criteria, read `references/workflow/review-checklist.md`.
+
+## Output Shape
+
+When designing a screen or flow, provide:
+
+- Target platform and design posture.
+- Prototype interpretation and preserved structure, when a prototype is provided.
+- Inferred UI Notes industry category, evidence from the user's description, secondary task model, and style rationale.
+- Benchmark set and extracted mobile patterns.
+- Screen hierarchy and navigation model.
+- Component list with states.
+- Visual asset inventory, generated/sourced image plan, and image composition rules when imagery is needed.
+- Layout, spacing, typography, color/material, imagery/media, icon, and density rules.
+- Interaction behavior, feedback, and motion.
+- Accessibility and edge-state checks.
+- Standard phone-size Image artifact first, then direct Figma output when write tools are available, or a Figma-ready import package when they are not.
+- For Figma converted from images, include whether the visible result is pixel-faithful, which components were created, which bitmap regions were reused as movable crops, and whether every visible region is independently movable/selectable.
+- HTML/local preview only when the user needs interaction, implementation, or responsive behavior checks.
+- Any open questions that block accurate design.
