@@ -17,6 +17,7 @@
 - **状态矩阵**：按行业和页面补齐 loading、empty、error、offline、permission、success、destructive 等状态。
 - **多屏一致性**：多屏设计必须统一导航、token、组件、图标语言、图片风格、实体数据和状态文案。
 - **交付包**：设计任务应沉淀 README、brief、assets、Figma spec/script/ledger、验证截图和 diff 报告。
+- **可执行工具**：提供 crop 导出脚本、视觉 diff 脚本和 Figma 重建模板，减少每次靠手工重做的误差。
 
 ## 适用场景
 
@@ -38,7 +39,8 @@
 7. 生成设计图前先写 production brief：screen、asset、icon、state、component、Figma reconstruction、delivery package。
 8. 需要视觉稿时先生成标准手机比例图片。
 9. 需要 Figma 时，把图片作为 source of truth：锁定参考图 + 可编辑重建稿 + 独立图片裁切 + 组件系统。
-10. 用截图和 region checklist 做视觉差异检查，没对齐就不能声称 1:1。
+10. 用 crop 脚本导出独立图片素材，用 Figma 模板重建可编辑 frame。
+11. 用截图、region checklist 和 visual diff 脚本做视觉差异检查，没对齐就不能声称 1:1。
 
 ## Figma 交付规则
 
@@ -61,6 +63,15 @@
 ├── AGENTS.md
 ├── README.md
 ├── SKILL.md
+├── examples/
+│   ├── crop-spec.example.json
+│   └── regions.example.json
+├── package.json
+├── scripts/
+│   ├── export-crops.js
+│   └── visual-diff.js
+├── templates/
+│   └── figma-reconstruction.js
 └── references/
     ├── industry/
     │   ├── industry-to-pattern-map.md
@@ -101,6 +112,30 @@
 ## 还可以继续增强
 
 - 增加 3-5 个完整案例包，例如 AI 修图、外卖、健身、财务、宠物社区。
-- 把 crop 坐标表做成自动导出脚本。
-- 把视觉 diff 从人工清单升级成自动截图对比。
 - 给 23 个行业补更细的 benchmark app 清单和常见 screen set。
+
+## 脚本使用
+
+先安装依赖：
+
+```bash
+npm install
+```
+
+导出图片裁切：
+
+```bash
+node scripts/export-crops.js --spec examples/crop-spec.example.json
+```
+
+对比源图和 Figma/HTML 截图：
+
+```bash
+node scripts/visual-diff.js --reference assets/generated/01-home-reference.png --candidate figma/screenshots/01-home.png --out diff/01-home --regions examples/regions.example.json
+```
+
+检查脚本语法：
+
+```bash
+npm run check:scripts
+```

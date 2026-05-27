@@ -1,0 +1,13 @@
+{
+  "name": "app-ui-design-skill",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Tools and templates for the AppUIDesign mobile UI design skill.",
+  "scripts": {
+    "check:scripts": "node --check scripts/export-crops.js && node --check scripts/visual-diff.js && node --check templates/figma-reconstruction.js"
+  },
+  "dependencies": {
+    "sharp": "^0.33.5"
+  }
+}

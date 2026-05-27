@@ -127,6 +127,8 @@ Minimum requirements:
 
 Use a script shape like this for `use_figma`. Replace image hashes after uploading assets, or create placeholders first and use the returned `imageNodes` map for `upload_assets`.
 
+For repeatable work, start from `templates/figma-reconstruction.js`. Keep project-specific copies in the delivery package, usually at `figma/figma-build-script.js`, so the exact build can be inspected and rerun.
+
 ```js
 const SPEC = {
   pageName: "Mobile App / Editable Reconstruction",

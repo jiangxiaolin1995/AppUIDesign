@@ -90,6 +90,28 @@ Suggested thresholds:
 
 Use available local tools. Prefer existing project tooling if present.
 
+Preferred repo script:
+
+```bash
+npm install
+node scripts/visual-diff.js \
+  --reference assets/generated/01-home-reference.png \
+  --candidate figma/screenshots/01-home.png \
+  --out diff/01-home \
+  --regions examples/regions.example.json \
+  --threshold 0.08
+```
+
+The script writes:
+
+- `reference-normalized.png`
+- `candidate-normalized.png`
+- `diff.png`
+- `visual-diff-report.md`
+- `visual-diff-report.json`
+
+Use `--fail-above 0.03` when an automated pass should fail if more than 3% of pixels exceed the threshold. Pixel percentage is only a signal; still review major regions manually.
+
 With ImageMagick:
 
 ```bash

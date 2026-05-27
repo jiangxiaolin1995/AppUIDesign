@@ -29,6 +29,9 @@ project-name/
     reference-normalized.png
     candidate-normalized.png
     diff.png
+  scripts/
+    crop-spec.json
+    diff-regions.json
   html/
     index.html
     styles.css
@@ -100,6 +103,16 @@ Include:
 
 Use `visual-diff.md` when the user asked for high fidelity or 1:1.
 
+### scripts and templates
+
+For repeatable handoff work, prefer the repository scripts and templates:
+
+- `scripts/export-crops.js`: exports bitmap crops from an approved source image using a JSON crop spec.
+- `scripts/visual-diff.js`: compares a reference image and candidate screenshot, then writes normalized images, a diff image, and Markdown/JSON reports.
+- `templates/figma-reconstruction.js`: a reusable Figma JS starting point for locked references, editable frames, image nodes, vector icons, component-like groups, and audit output.
+
+Copy scripts into a project package only when the project needs a self-contained handoff. Otherwise, reference them from this Skill repo and store only the project-specific specs and outputs.
+
 ## Naming Rules
 
 Use stable names:
@@ -148,5 +161,6 @@ If publishing to GitHub:
 - Figma script/spec/ledger exists when Figma is involved.
 - Assets are organized into references/generated/crops/icons.
 - Visual diff report exists when claiming pixel-faithful or 1:1.
+- Crop spec and diff region spec exist when scripts were used.
 - Handoff explains fidelity level and limitations.
 - No temporary URLs or secrets are committed.

@@ -101,7 +101,7 @@ Use this skill when a user asks for mobile app page design, mobile UI rules, des
 - For workspace/Figma/GitHub package structure, README, brief, handoff, assets, ledgers, and diff artifact rules, read `references/workflow/delivery-package.md`.
 - For image-to-Figma conversion, editable reconstruction, layer classification, crop rules, script templates, and visual difference checks, read `references/workflow/figma-reconstruction.md`.
 - For extracting, naming, and placing image crops in Figma, read `references/workflow/image-crop-spec.md`.
-- For reusable Figma script snippets and implementation helpers, read `references/workflow/figma-script-templates.md`.
+- For reusable Figma script snippets and implementation helpers, read `references/workflow/figma-script-templates.md` and `templates/figma-reconstruction.js`.
 - For screenshot normalization, region checklists, pixel/threshold diff rules, diff report templates, and fidelity labels, read `references/workflow/visual-diff.md`.
 - For UI Notes industry-based app type selection, read `references/industry/product-archetypes.md`.
 - For industry-fit visual style, read `references/industry/style-decision-guide.md`.
@@ -134,5 +134,6 @@ When designing a screen or flow, provide:
 - For direct Figma writes, include the script audit result: page/frame ids, image node ids for upload/backfill, component inventory, icon inventory, warnings, and screenshot verification status.
 - For visual fidelity claims, include the visual diff level performed: manual visual check, region checklist, or pixel diff.
 - For delivery work, include package paths: README, production brief, handoff, assets, Figma spec/ledger/script, verification screenshots, and visual diff report when created.
+- When using repository scripts, include the exact `scripts/export-crops.js` or `scripts/visual-diff.js` command and the output paths.
 - HTML/local preview only when the user needs interaction, implementation, or responsive behavior checks.
 - Any open questions that block accurate design.

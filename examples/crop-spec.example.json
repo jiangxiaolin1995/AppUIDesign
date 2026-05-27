@@ -1,0 +1,28 @@
+{
+  "source": "assets/generated/01-home-reference.png",
+  "outDir": "assets/crops",
+  "coordinateSpace": "logical",
+  "scale": 3,
+  "crops": [
+    {
+      "name": "01-home-hero",
+      "type": "hero",
+      "x": 24,
+      "y": 150,
+      "width": 345,
+      "height": 160,
+      "radius": 18,
+      "figmaHandling": "Place as one movable image-fill rectangle with matching radius"
+    },
+    {
+      "name": "01-home-card-avatar",
+      "type": "avatar",
+      "x": 28,
+      "y": 386,
+      "width": 40,
+      "height": 40,
+      "radius": 20,
+      "figmaHandling": "Place as independent avatar crop; rebuild name and metadata as text"
+    }
+  ]
+}

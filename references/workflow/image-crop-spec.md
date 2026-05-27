@@ -63,6 +63,48 @@ Bitmap Crop / 03-result-generated-photo
 7. Apply the same radius, mask, focal point, scrim, overlay, and shadow as the source.
 8. Rebuild labels, buttons, icons, charts, and controls as editable layers above or around the crop.
 
+## Crop Script
+
+Use `scripts/export-crops.js` when crop coordinates are known or can be measured from the approved source image.
+
+Example:
+
+```bash
+npm install
+node scripts/export-crops.js --spec examples/crop-spec.example.json
+```
+
+The crop spec supports source-pixel coordinates or logical Figma coordinates:
+
+```json
+{
+  "source": "assets/generated/01-home-reference.png",
+  "outDir": "assets/crops",
+  "coordinateSpace": "logical",
+  "scale": 3,
+  "crops": [
+    {
+      "name": "01-home-hero",
+      "type": "hero",
+      "x": 24,
+      "y": 150,
+      "width": 345,
+      "height": 160,
+      "radius": 18,
+      "figmaHandling": "Place as one movable image-fill rectangle with matching radius"
+    }
+  ]
+}
+```
+
+The script writes:
+
+- individual crop PNG files
+- `crop-ledger.json`
+- `crop-ledger.md`
+
+Use the ledger in the Figma import spec so every bitmap crop has a clear source, coordinate system, scale, and intended Figma handling.
+
 ## Platform Size Rules
 
 - iOS target: use `393x852`, `390x844`, `402x874`, `430x932`, or matching `@3x` exports such as `1179x2556` and `1290x2796`.
