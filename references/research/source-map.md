@@ -17,11 +17,9 @@ Use for native iOS expectations: hierarchy, harmony with system UI, Dynamic Type
 ### Google / Android / Material
 
 - Android mobile UI design: https://developer.android.com/design/ui/mobile
-- Android adaptive mobile layout: https://developer.android.com/design/ui/mobile/guides/layout-and-content/adapt-layout
 - Android touch target size: https://support.google.com/accessibility/android/answer/7101858
 - Material Design 3: https://m3.material.io/
 - Material accessibility: https://m2.material.io/design/usability/accessibility.html
-- Material 3 minimum interactive component size: https://developer.android.com/reference/kotlin/androidx/compose/material3/minimumInteractiveComponentSize.modifier
 - Material bottom navigation: https://m2.material.io/components/bottom-navigation/ios
 - Android window size classes: https://developer.android.com/develop/ui/compose/layouts/adaptive/use-window-size-classes
 
@@ -197,7 +195,6 @@ Use for large-business mobile consistency: standard color palettes, icon librari
 ### JD.com
 
 - JD Retail Design Language: https://jdrdl.jd.com/Home.html
-- JD Retail operation color: https://jdrdl.jd.com/Design-Operation-color.html
 - NutUI mobile component library: https://nutui.jd.com/
 - JD mini-program cross-platform standard design deck: https://www.w3.org/2021/03/miniapp-cjk/slides/standard-design-jd.pdf
 
@@ -238,12 +235,6 @@ Use as a function and component pattern source. The public page currently shows 
 - Meiye mobile app channel: https://www.meiye.art/Screenshot/23
 
 Use as an app-discovery and category-breadth source. Public pages expose mobile app categories including AI, transportation, meditation, Google apps, photo/video editing, ecommerce, habit building, fitness, food delivery, reading, notes/planning, social/communication, finance, healthcare, live/video, news, music/entertainment, tickets, tools, education, real estate/rental, sports, interest communities, travel/hotel, and food/health. Ignore the web screenshot channel unless the user asks for web design.
-
-### Meiye Inspiration Album
-
-- Meiye Inspiration Album: https://www.meiye.art/InspirationAlbum
-
-Use as a mobile visual-category inspiration source. Public pages expose APP albums and mobile function/style albums such as home, profile, launch, onboarding, privacy agreement, permissions, login, search, empty state, publish, share, filter, comments, image detail, form, chat, map, membership, finance home, image/video editing, food delivery, shopping cart, healthcare, education, news, fitness, social, travel, ecommerce, dark mode, cards, and data visualization. Treat it as pattern inspiration, not a screenshot-copy source.
 
 ## Research Gaps To Recheck
 

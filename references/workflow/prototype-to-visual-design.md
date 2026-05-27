@@ -6,22 +6,25 @@ Use this file when the user provides a wireframe, prototype, sketch, screenshot,
 
 When a user provides a prototype, preserve the user's intended information architecture and core workflow unless there is a clear mobile usability problem. Improve hierarchy, spacing, component quality, visual style, states, and platform fit; do not casually replace the product structure with a generic app pattern.
 
+Use `prototype-constraints.md` to classify must-preserve, may-improve, must-not-change, and usability-override items before making visual changes.
+
 ## Prototype Reading Workflow
 
 1. Identify the screen type: onboarding, home, feed, search, list, detail, editor, checkout, profile, settings, dashboard, or modal/sheet.
 2. Extract the structure: navigation, content groups, primary action, secondary actions, repeated components, and bottom/top bars.
 3. Infer the UI Notes industry and secondary task model from the prototype plus the user's text.
-4. Decide what must be preserved:
+4. Create or update the production brief from `design-production-brief.md`. The prototype supplies structure; the brief supplies the production plan for screens, assets, icons, states, layers, prompts, and Figma reconstruction.
+5. Decide what must be preserved:
    - Page purpose and user intent.
    - Primary workflow and CTA.
    - Required content blocks.
    - Navigation destinations.
    - Business-critical modules such as pay, upload, publish, chat, booking, or export.
-5. Decide what should be improved:
+6. Decide what should be improved:
    - Visual hierarchy, spacing, typography, contrast, icon clarity, touch targets, component states, empty/error/loading states.
    - Industry-fit style: trust, speed, density, media richness, or task focus.
    - Mobile platform conventions: safe area, status bar, home indicator, keyboard, sheets, gestures, permissions.
-6. Produce the design artifact the user asked for.
+7. Produce the design artifact the user asked for.
 
 ## Visual Design Output Modes
 
@@ -66,16 +69,19 @@ Rules:
 - If exact vector editability conflicts with fidelity, keep that region as a movable bitmap crop and label it as bitmap-backed. Do not flatten the whole screen to hide the problem.
 - Keep a locked reference image or reference frame in the Figma file during reconstruction, and compare the final editable Figma screenshot against it.
 - Do not claim "1:1", "pixel-faithful", or "converted to Figma" if the final visible screen is only one pasted screenshot, or if photos, crops, density, or visual hierarchy changed materially. Call it a raster reference or editable draft instead.
+- Before writing Figma layers, classify every region as layout, editable text, vector/icon, bitmap media, bitmap composite, effect, or system chrome. Use `references/workflow/figma-reconstruction.md` as the detailed execution manual.
+- Do not replace media during reconstruction. If the generated image used a specific dog, dish, product, model, cover, map tile, or edited-photo result, the Figma file must use that exact asset or a crop from that exact source.
 
 Recommended Figma conversion steps:
 
 1. Upload the full raster screen as a locked reference beside the work frame or on a separate reference page.
 2. Create a phone frame at the target size with no flattened screenshot as the final visible layer.
-3. Crop/reuse image regions from the original screen or source assets for media containers, one movable node per hero image, thumbnail, avatar, editor canvas, or generated result.
-4. Build a component kit for repeated text styles, cards, charts, buttons, icons, navigation, tab bars, toolbars, and controls.
-5. Assemble the visible screen from component instances, text layers, vector layers, and movable bitmap crops.
-6. Capture a Figma screenshot and compare it with the approved raster image before final handoff.
-7. Keep the locked reference in the file for audit, but do not present it as the editable screen.
+3. Produce a source segmentation map with coordinates, region type, intended Figma layer type, asset path, crop behavior, radius, shadow/scrim, and editability target.
+4. Crop/reuse image regions from the original screen or source assets for media containers, one movable node per hero image, thumbnail, avatar, editor canvas, or generated result.
+5. Build a component kit for repeated text styles, cards, charts, buttons, icons, navigation, tab bars, toolbars, and controls.
+6. Assemble the visible screen from component instances, text layers, vector layers, and movable bitmap crops.
+7. Capture a Figma screenshot and compare it with the approved raster image before final handoff.
+8. Keep the locked reference in the file for audit, but do not present it as the editable screen.
 
 Region-by-region replacement protocol:
 
@@ -85,6 +91,7 @@ Region-by-region replacement protocol:
 - Place media/photo regions only with original assets or crops, never with abstract drawings.
 - After each major region, capture or inspect the Figma result. If it drifts, adjust the component or crop until it matches.
 - Report which regions are editable components, editable text/vector layers, or movable bitmap-backed assets.
+- If a region must remain a bitmap composite, keep it limited to that region, name it clearly, and record why a cleaner split was not possible.
 
 ## Standard Phone Image Rules
 
