@@ -20,7 +20,7 @@ AppUIDesign/
 - `references/industry/`：行业分类、风格决策、页面/组件模式映射。
 - `references/research/`：外部设计规范、平台原则、图片规范和资料来源。
 - `references/workflow/`：原型约束、生产 brief、图片生成、图标管线、组件系统、Figma 重建、视觉差异检查、状态矩阵、多屏一致性、交付包和验收清单。
-- `scripts/`：可执行辅助工具，目前包括图片裁切导出和视觉 diff。
+- `scripts/`：可执行辅助工具，目前包括截图测量、图片裁切导出和视觉 diff。
 - `templates/`：可复制的 Figma JS 重建模板。
 - `examples/`：脚本输入示例，例如 crop spec 和 diff region spec。
 
@@ -30,7 +30,7 @@ AppUIDesign/
 
 Figma 输出默认要求可编辑且尽量 1:1：整屏图只能做参考，最终稿必须由可移动素材、独立 bitmap crop、矢量图标、文本层和组件组成，并通过视觉差异检查。不能用圆点代替正式图标。生成图片时就要同步规划 Figma 分层、图标来源、图片裁切、组件边界、状态矩阵和交付包。
 
-重复性工作优先沉淀为脚本或模板：图片裁切使用 `scripts/export-crops.js`，视觉差异检查使用 `scripts/visual-diff.js`，Figma 可编辑重建从 `templates/figma-reconstruction.js` 开始，再保存项目自己的 `figma/figma-build-script.js`。
+重复性工作优先沉淀为脚本或模板：截图/参考图测量使用 `scripts/measure-screenshot.js`，图片裁切使用 `scripts/export-crops.js`，视觉差异检查使用 `scripts/visual-diff.js`，Figma 可编辑重建从 `templates/figma-reconstruction.js` 开始，再保存项目自己的 `figma/figma-build-script.js`。
 
 ## 变更日志
 
@@ -40,3 +40,8 @@ Figma 输出默认要求可编辑且尽量 1:1：整屏图只能做参考，最�
 - 2026-05-26：将 UI Notes Pin + 美叶灵感集升级为设计图/Figma 前的强制案例提炼步骤。
 - 2026-05-27：同步组件系统、原型约束、状态矩阵、多屏一致性、交付包、图标管线和更详细的 Figma 1:1 可编辑重建规则。
 - 2026-05-27：补充可执行 crop 导出脚本、visual diff 脚本、Figma reconstruction 模板和对应示例输入。
+- 2026-05-28：补充细节图片保真、图标准确度和 Figma 布局稳定三类验收门槛。
+- 2026-05-28：新增设计生产包前置门槛，要求最终出图前先锁定布局、文字、间距、组件、icon、素材和 Figma 还原合同。
+- 2026-05-28：补充 source asset pack 和左原图/右可编辑还原规则，要求生图阶段同步准备干净媒体素材、icon 来源、asset manifest，并在 Figma 中验证每个图片节点的 `IMAGE` fill。
+- 2026-05-29：补充 manifest 校验、Figma packet 生成、Figma audit 校验、source asset prompt 模板和外部资料链接检查，减少 Figma JS 还原时的布局猜测。
+- 2026-05-29：合并截图测量能力，新增 `measure-screenshot.js`、measurement 示例和测量优先的 Figma 还原流程，要求先产出 measurement report 再写 Figma。

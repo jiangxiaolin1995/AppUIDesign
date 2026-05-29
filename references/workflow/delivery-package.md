@@ -19,8 +19,11 @@ project-name/
     crops/
     icons/
   figma/
+    asset-manifest.json
+    figma-packet.js
     figma-build-script.js
     import-spec.md
+    figma-audit.json
     fidelity-ledger.md
     component-ledger.md
     screenshots/
@@ -86,6 +89,26 @@ Include:
 - layer classification
 - upload/backfill instructions
 
+### figma/asset-manifest.json
+
+Use `examples/asset-manifest.example.json` as the shape. It should be validated before Figma JS is written and should include:
+
+- screen size and scale
+- locked reference image
+- clean media assets
+- measured regions
+- icon inventory
+- fixed text boxes
+- target Figma node names
+
+### figma/figma-packet.js
+
+Generate from the manifest with `scripts/build-figma-packet.js`. The Figma build script should read or paste this packet so coordinates and node names come from the manifest.
+
+### figma/figma-audit.json
+
+Save the audit returned by Figma JS when possible. Validate it with `scripts/validate-figma-audit.js` before claiming high-fidelity or 1:1 reconstruction.
+
 ### figma/fidelity-ledger.md
 
 Include:
@@ -108,8 +131,12 @@ Use `visual-diff.md` when the user asked for high fidelity or 1:1.
 For repeatable handoff work, prefer the repository scripts and templates:
 
 - `scripts/export-crops.js`: exports bitmap crops from an approved source image using a JSON crop spec.
+- `scripts/validate-asset-manifest.js`: checks source asset packs before Figma JS is written.
+- `scripts/build-figma-packet.js`: converts a manifest into JS constants for Figma scripts.
+- `scripts/validate-figma-audit.js`: checks Figma output for left/right pairs, image fills, and editable layer evidence.
 - `scripts/visual-diff.js`: compares a reference image and candidate screenshot, then writes normalized images, a diff image, and Markdown/JSON reports.
-- `templates/figma-reconstruction.js`: a reusable Figma JS starting point for locked references, editable frames, image nodes, vector icons, component-like groups, and audit output.
+- `scripts/check-links.js`: checks public reference links during source refresh.
+- `templates/figma-reconstruction.js`: a reusable Figma JS starting point for locked references, editable frames, image nodes, vector icons, component-like groups, audit output, and optional manifest-driven base frame generation.
 
 Copy scripts into a project package only when the project needs a self-contained handoff. Otherwise, reference them from this Skill repo and store only the project-specific specs and outputs.
 
@@ -159,6 +186,7 @@ If publishing to GitHub:
 - Production brief exists.
 - Final visual artifacts are saved.
 - Figma script/spec/ledger exists when Figma is involved.
+- Asset manifest and Figma audit exist when claiming image-to-Figma fidelity.
 - Assets are organized into references/generated/crops/icons.
 - Visual diff report exists when claiming pixel-faithful or 1:1.
 - Crop spec and diff region spec exist when scripts were used.

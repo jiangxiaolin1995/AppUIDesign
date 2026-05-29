@@ -8,6 +8,8 @@ Do not claim `1:1`, `pixel-perfect`, or `pixel-faithful` unless a same-size scre
 
 The goal is not only a numeric diff. The check must identify visible product drift: wrong image crop, missing module, placeholder icon, text overlap, density change, shifted navigation, or unsafe touch/safe-area layout.
 
+Before pixel diff, check measured geometry. Pixel diff can look noisy because of shadows and media, but layout drift is often a simple coordinate error. A design with editable layers fails if major containers, tab bars, cards, or text baselines are not in the measured positions.
+
 ## Inputs
 
 Prepare these files before checking:
@@ -17,6 +19,7 @@ Prepare these files before checking:
 - `frame`: logical size such as `393x852` or source size such as `1179x2556`.
 - `scale`: usually `3x` when comparing `1179x2556` source to `393x852` Figma.
 - `region map`: screen regions from the production brief or source segmentation.
+- `measurement table`: source rectangles and Figma logical rectangles for key regions.
 
 ## Output Files
 
@@ -26,6 +29,7 @@ Save comparison artifacts when possible:
 - `*-candidate-normalized.png`
 - `*-diff.png`
 - `*-diff-report.md`
+- `*-layout-report.md`
 
 ## Comparison Levels
 
@@ -33,6 +37,7 @@ Use three levels:
 
 - `manual visual check`: screenshot viewed next to reference. Required for every design handoff.
 - `region checklist`: each major region is checked and marked pass/fail. Required before calling something high-fidelity.
+- `layout geometry check`: measured rectangles, gaps, radii, and baselines are compared against the reference measurement table. Required before calling any image-to-Figma result 1:1.
 - `pixel/threshold diff`: normalized images are compared with a diff image and metrics. Required before calling something pixel-faithful.
 
 ## Normalization Protocol
@@ -58,6 +63,32 @@ Check these regions in order:
 - Typography: font size, weight, line height, truncation, text wrapping.
 - Color and effects: brand/accent color, surface, shadows, blur, opacity.
 - Edge states: empty/error/loading/permission/offline/success states when part of scope.
+
+## Layout Geometry Check
+
+Use the measurement table from `design-production-brief.md` or `figma-reconstruction.md`.
+
+For each measured region, check:
+
+- `x/y/w/h`: same logical coordinates within tolerance.
+- `gap`: vertical and horizontal gaps between neighboring modules.
+- `radius`: card, media, button, chip, and nav radius.
+- `padding`: inner content positions relative to card/container.
+- `baseline`: title, body, label, and tab label vertical alignment.
+- `z-order`: overlays, scrims, badges, floating buttons, and bottom sheets.
+- `clip`: media and container clipping is correct.
+- `constraints`: repeated components do not resize or shift when labels change.
+
+Suggested tolerances:
+
+- Frame and safe area: exact.
+- Header/nav/bottom tab: `0-2px`.
+- Main cards and media: `0-3px`.
+- Repeated cards/list rows: `0-3px`.
+- Text baselines: `0-3px`, allowing font substitution.
+- Icon geometry: `0-2px`.
+
+If any core module is outside tolerance, mark it `major` and fix layout before visual styling.
 
 ## Failure Categories
 
@@ -89,6 +120,15 @@ Suggested thresholds:
 ## CLI Workflow
 
 Use available local tools. Prefer existing project tooling if present.
+
+Before diffing, generate or update the measurement artifacts:
+
+```bash
+node scripts/measure-screenshot.js \
+  --image assets/generated/01-home-reference.png \
+  --regions specs/01-home-regions.json \
+  --out specs/measurements/01-home
+```
 
 Preferred repo script:
 

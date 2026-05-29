@@ -20,8 +20,9 @@ Do not generate images for simple icons, chevrons, UI glyphs, charts, wireframes
 
 ## Built-In Image Generation Workflow
 
-1. Create or update the production brief from `design-production-brief.md`. Use it to lock screen scope, image roles, icon roles, Figma handling, and acceptance criteria before prompting the image model.
-2. Make an asset inventory before implementation:
+1. Create or update the design source package from `design-source-package.md` before final screen generation. Use it to lock exact phone size, layout blueprint, typography tokens, spacing/radius tokens, component contracts, icon contracts, asset contracts, prompts, and Figma reconstruction rules.
+2. Create or update the production brief from `design-production-brief.md`. Use it to lock screen scope, image roles, icon roles, Figma handling, and acceptance criteria before prompting the image model.
+3. Make an asset inventory before implementation:
    - asset name
    - screen/page where it appears
    - role: hero, card thumbnail, product image, empty state, background, before/after sample, cover, avatar
@@ -30,21 +31,56 @@ Do not generate images for simple icons, chevrons, UI glyphs, charts, wireframes
    - composition role: full-bleed background, immersive hero, card thumbnail, content image, cutout, or decorative support
    - crop behavior: cover, contain, fixed focal crop, masked edge, or transparent cutout
    - avoid list: text, watermark, logos, busy backgrounds, unreadable detail
-3. Make an icon inventory before implementation. Use `icon-pipeline.md` for source decisions, custom icon sheets, source-raster crops, badge handling, and acceptance criteria:
+4. Make an icon inventory before implementation. Use `icon-pipeline.md` for source decisions, custom icon sheets, source-raster crops, badge handling, and acceptance criteria:
    - icon name and semantic role
    - screen/page where it appears
    - selected/unselected/disabled/badge state
    - expected size, stroke weight, color, hit area, and label relation
    - source: vector/icon library, generated icon sheet, source-raster crop, or custom Figma vector
    - avoid list: placeholder circles, emoji substitutes, mismatched metaphors, inconsistent stroke weights
-4. Use the built-in image generation tool by default for new bitmap assets.
-5. Generate a companion asset sheet when the screen contains custom illustrated icons, custom tab icons, badges, mascots, stickers, or brand marks that must survive Figma reconstruction.
-6. For standard control icons, prefer vector reconstruction or an established icon library over image generation.
-7. For project-bound assets, move or copy the selected generated image into the workspace before finalizing.
-8. Reference workspace images from the design artifact. Never leave a design dependent on an image stored only in Codex's default generated-image location.
-9. If a transparent cutout is required, generate on a flat chroma-key background first and remove the background locally; use true transparent CLI fallback only when explicitly confirmed.
-10. Inspect the output for subject quality, crop, lighting, style fit, and whether it competes with UI text.
-11. Replace placeholders in the design with final assets and verify the layout still fits.
+5. Use the built-in image generation tool by default for new bitmap assets.
+6. Generate separate clean media assets for regions that will become Figma image nodes: hero photos, editor canvases, before/after results, food/product photos, maps, covers, avatars, thumbnails, and generated-result examples.
+7. Generate a companion asset sheet when the screen contains custom illustrated icons, custom tab icons, badges, mascots, stickers, or brand marks that must survive Figma reconstruction.
+8. For standard control icons, prefer vector reconstruction or an established icon library over image generation.
+9. For project-bound assets, move or copy the selected generated image into the workspace before finalizing.
+10. Reference workspace images from the design artifact. Never leave a design dependent on an image stored only in Codex's default generated-image location.
+11. If a transparent cutout is required, generate on a flat chroma-key background first and remove the background locally; use true transparent CLI fallback only when explicitly confirmed.
+12. Inspect the output for subject quality, crop, lighting, style fit, and whether it competes with UI text.
+13. Replace placeholders in the design with final assets and verify the layout still fits.
+
+## Figma Source Asset Pack
+
+For any task that asks for Figma, generate or assemble this pack before writing Figma:
+
+| asset type | required files | purpose |
+| --- | --- | --- |
+| full-screen reference | one PNG per screen, standard phone ratio | placed on the left as locked original |
+| clean media | hero photos, thumbnails, avatars, maps, editor canvases, generated results | used as right-side Figma image fills |
+| custom icon sheet | only for custom illustrated marks or brand icons | cropped or rebuilt as vector/icon components |
+| asset manifest | Markdown or JSON mapping file to Figma node, crop mode, focal point, radius, and overlay rules | prevents wrong upload/backfill |
+
+Rules:
+
+- Generate the full-screen reference image from the design source package, not from a vague style prompt.
+- Generate clean media assets without UI: no labels, buttons, chips, bottom nav, status bar, watermark, or decorative text.
+- Do not generate standard control icons as raster unless the design intentionally uses custom illustrated icons. Use vector/library reconstruction for common icons.
+- Save all selected assets into the workspace before Figma work. Do not rely only on the default generated-image folder.
+- If the asset pack is incomplete, label it `asset-pack-partial` or `asset-pack-blocked` and do not claim 1:1 reconstruction.
+- After Figma upload, verify target media nodes use `IMAGE` fills. Grey rectangles, gradients, and empty fills mean the Figma handoff is not complete.
+
+### Required Generation Sequence
+
+Use this sequence for image-first Figma work:
+
+1. Generate or source clean media first: hero photos, thumbnails, avatars, covers, maps, editor canvases, AI results, product/food images, or illustrations.
+2. Generate custom icon sheets only when the icons are custom, brand-specific, illustrated, or not available in a vector/icon library.
+3. Generate the final full-screen reference image from the design source package, using the clean media and icon plan as constraints.
+4. Save all selected files into the workspace.
+5. Write an asset manifest that maps each file to the exact Figma node name, crop mode, focal point, radius, and overlay split.
+6. Rebuild Figma with the locked reference on the left and editable reconstruction on the right.
+7. Verify every target media node has the intended `IMAGE` fill and that standard icons are vectors/components rather than placeholder circles.
+
+Do not treat the final full-screen generated image as the only source asset. It is a reference for comparison. The editable Figma frame needs its own clean materials so photos, thumbnails, icon art, and generated-result panels can be moved or replaced without breaking the UI.
 
 ## Direct Raster Screen Generation
 
@@ -53,18 +89,25 @@ Use direct raster generation when the user asks for "设计图", "视觉稿", "�
 Rules:
 
 - Generate one standard vertical phone screen per image. Target an iPhone-like `9:19.5` ratio such as `1179x2556`, `1290x2796`, or equivalent high-resolution portrait phone size.
+- Generate the final high-fidelity screen from the design source package. If no package exists, label the result `visual-exploration-only`.
 - For multi-screen flows, generate separate full-size images for each screen: home, list, detail, checkout, profile, editor, etc.
 - Do not pack many screens into one compressed board as the only deliverable. That makes text, spacing, and UI hierarchy unusable.
 - Do not generate browser mockups, desktop boards, landscape posters, or square concept cards unless the user explicitly asks.
 - Ask the image model for "the actual app screen, edge-to-edge inside a phone-screen canvas, no external device frame, no browser chrome" unless a device-frame presentation is requested.
+- Include the package's layout blueprint, typography scale, spacing rhythm, component count, icon roles, and media placement in the screen prompt. Avoid prompts that only describe style mood.
 - Ask the image model to keep control icons simple, consistent, and readable, and do not accept generic circles as tab icons in high-fidelity screens.
 - If the screen uses custom icons, generate a separate icon/asset sheet in addition to the screen: transparent or flat-background icons, consistent stroke/fill style, no labels baked into the icon, and one icon per asset slot.
+- If the screen uses photos, generated results, maps, covers, or editor canvases, generate those as separate no-UI companion media assets whenever Figma reconstruction is expected.
+- If the screen will become Figma, include a source asset pack summary with the image output: full-screen reference, clean media files, custom icon sheet or vector icon contract, and asset manifest path.
+- In-screen icons from the final reference image are not enough for Figma. Standard UI icons must be rebuilt as vector/component layers; custom icons must come from a clean sheet or exact source crop.
 - If a full-flow overview is useful, create it only after full-size individual screens exist.
 - Save project-bound generated screens into the workspace and report their paths.
 
 Preferred pipeline:
 
-- Start with image-generated screens for visual direction and polish.
+- Start with a design source package.
+- Generate the source asset pack: full-screen reference images, clean media assets, and custom icon sheets only if needed.
+- Use image-generated screens for visual direction and as left-side locked references.
 - Move to Figma after the user accepts the direction and needs editable design handoff.
 - Move to HTML only when interaction, responsive preview, or implementation is requested.
 - Do not use HTML as a substitute for image generation when the user is judging visual design quality.
@@ -107,14 +150,17 @@ When a raster screen is later converted to Figma, preserve bitmap regions instea
 - Before conversion, label each image region as `photo/media`, `avatar`, `cover/poster`, `generated result`, `editor canvas`, `map tile`, `product/food image`, or `bitmap composite`. This prevents accidentally redrawing or replacing assets that should remain visual material.
 - If image generation produced a full screen but not clean separated assets, crop only the needed media regions from the full-size screen. Keep the cropped region movable in Figma and document that it is bitmap-backed.
 - Never use a different photo during Figma reconstruction to "approximate" the original. If the visual source uses a specific image, the Figma result must preserve that exact image or its crop.
+- In the Figma file, keep the original full-screen image visible as the left locked reference and rebuild the right frame from editable layers and independent media nodes.
 
 ## Prompt Rules
 
 - Describe the asset as a product/design asset, not a standalone artwork.
+- For final screen prompts, start from the design source package: phone size, module order, approximate rectangles, typography hierarchy, spacing, icon roles, and media roles.
 - Specify realistic crop and aspect ratio: square menu photo, 4:3 product card, tall phone editor sample, wide hero banner.
 - If an image should fill a full screen or card, prompt for enough background/edge detail so it can be safely cropped with `cover`.
 - Match the industry style: food should feel appetizing and legible; finance/medical imagery should be restrained; creation/editor assets should leave room for UI overlays.
 - Ask for no text, no watermark, no logo unless exact in-image text is required.
+- For companion media assets, ask for no UI, no labels, no buttons, no icons, no status bar, and no device frame.
 - Avoid overly busy compositions when the asset sits behind controls or labels.
 - For repeated assets in one screen, keep lighting, background, crop, and visual language consistent.
 
@@ -130,6 +176,10 @@ When a raster screen is later converted to Figma, preserve bitmap regions instea
 - There is no unwanted text, watermark, logo, distorted anatomy, or confusing object.
 - The file is stored in the workspace and referenced by the design.
 - The page still works if the image takes time to load: size is stable, no layout jump.
+- A design source package exists or the output is explicitly labeled `visual-exploration-only`.
+- Figma-bound images have separate media/icon assets or documented reasons why they do not.
+- Figma-bound screens have full-screen reference images for left/right comparison.
+- Target Figma media nodes have verified `IMAGE` fills after upload/backfill.
 
 ## Output Notes
 
@@ -138,4 +188,8 @@ When image generation is used for a design task, report:
 - Generated asset names and where they are used.
 - Whether images were generated with the built-in image tool or another explicit user-approved path.
 - Final workspace paths for project-bound assets.
+- Asset manifest path and the Figma node names it covers.
+- Asset pack status: `asset-pack-ready`, `asset-pack-partial`, or `asset-pack-blocked`.
+- Reference pair status: whether each full-screen reference is ready to be placed as `Locked Reference / {screen}` beside `Editable Reconstruction / {screen}`.
 - Any asset limitations or replacements still needed.
+- Design source package status and whether the final screen is Figma-ready.

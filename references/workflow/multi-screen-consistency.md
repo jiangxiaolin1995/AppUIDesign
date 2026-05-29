@@ -6,6 +6,8 @@ Use this file when designing two or more screens for the same mobile app.
 
 Multiple screens must feel like one product. Keep tokens, navigation, icon language, imagery, spacing, component behavior, and state handling consistent across the set.
 
+When the user asks to design an app, bottom tabs define the minimum primary screen set. A four-tab app needs four primary tab screens by default, one for each tab. A tab can be omitted only when the user explicitly asks for a single page, a specific flow, or a limited draft; record that scope decision in the ledger.
+
 ## Consistency Dimensions
 
 Check consistency across:
@@ -49,12 +51,15 @@ Do not let each screen invent a separate palette, radius system, or icon style u
 
 ## Navigation Continuity
 
+- Create a Tab-To-Screen Coverage table before screen generation.
+- Generate one primary screen per bottom tab by default.
 - Keep bottom tab order identical across main screens.
 - Keep selected tab state correct per screen.
 - Keep top bar title/action logic consistent.
 - Keep back behavior predictable.
 - Keep floating action button placement consistent.
 - Do not change labels between screens without a reason.
+- If a tab is an action tab such as publish/create, include its action screen, sheet, or modal state.
 
 ## Imagery Continuity
 
@@ -104,6 +109,10 @@ For each flow, verify:
 ```md
 # Multi-Screen Consistency Ledger
 
+## Tab-To-Screen Coverage
+| tab id | label | screen id | screen purpose | selected state | status | notes |
+| --- | --- | --- | --- | --- | --- | --- |
+
 ## Tokens
 - 
 
@@ -125,6 +134,7 @@ For each flow, verify:
 
 ## Acceptance Checklist
 
+- Every bottom tab has a corresponding primary screen, action screen, sheet, or documented omission.
 - Tokens are shared.
 - Navigation is consistent.
 - Icons share style and semantics.

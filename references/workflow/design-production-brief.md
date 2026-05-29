@@ -8,6 +8,10 @@ Before generating or rebuilding any screen, create a production brief. The brief
 
 Do not skip the brief for visual work. A short brief is acceptable for simple one-screen tasks, but it must still include industry, screen size, navigation, assets, icons, and layer plan.
 
+If the output may become Figma, the production brief must include or link a design source package from `design-source-package.md`. The source package is more specific than the brief: it locks exact layout rectangles, typography tokens, spacing/radius tokens, component contracts, icon contracts, asset contracts, image prompts, and the Figma reconstruction contract before final image generation.
+
+If the design source package is missing, the next raster image is only `visual-exploration-only`. Do not present it as Figma-ready.
+
 ## Production Brief Template
 
 ```md
@@ -20,6 +24,8 @@ Do not skip the brief for visual work. A short brief is acceptable for simple on
 - Target phone size:
 - Raster size:
 - Figma logical size:
+- Design source package status: source-package-ready / visual-exploration-only / figma-blocked / figma-ready-with-assumptions
+- Design source package path:
 
 ## Industry And Style
 - Primary UI Notes industry:
@@ -49,6 +55,13 @@ Do not skip the brief for visual work. A short brief is acceptable for simple on
 - Modal/sheet/dialog use:
 - Back behavior:
 
+## Tab-To-Screen Coverage
+When the request is to design an app, every bottom tab becomes one primary screen by default.
+
+| tab id | tab label | purpose | screen id | screen name | selected state needed | included? | omission reason |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| home | 首页 | dashboard/feed/start | 01-home | Home | yes | yes | none |
+
 ## Component Inventory
 - Navigation:
 - Cards:
@@ -60,6 +73,32 @@ Do not skip the brief for visual work. A short brief is acceptable for simple on
 - Charts/metrics:
 - Empty/error/loading states:
 
+## Design Source Package Summary
+- Layout blueprint path or table:
+- Typography token table:
+- Spacing/radius token table:
+- Component contract:
+- Icon contract:
+- Asset contract:
+- Image generation contract:
+- Figma reconstruction contract:
+- Missing information or assumptions:
+
+## Layout Blueprint
+| region | role | x | y | w | h | radius | gap/padding | z | Figma strategy |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  |  |  |  |  |  |  |  |  |  |
+
+## Typography Tokens
+| token | use | size | weight | line-height | color | text box behavior |
+| --- | --- | --- | --- | --- | --- | --- |
+|  |  |  |  |  |  |  |
+
+## Spacing And Radius Tokens
+| token | value | use |
+| --- | --- | --- |
+|  |  |  |
+
 ## Figma Component System Plan
 - Components to create:
 - Component-like groups:
@@ -68,23 +107,25 @@ Do not skip the brief for visual work. A short brief is acceptable for simple on
 - Component ledger path:
 
 ## Icon Inventory
-| icon | role | state | source | size | color | notes |
-| --- | --- | --- | --- | --- | --- | --- |
-| home | bottom tab | selected/default | vector/icon library | 24 | brand/neutral | no circle fallback |
+| icon | batch | label | role | expected glyph | state | source | asset file | size | stroke/fill | color | notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| home | navigation | 首页 | bottom tab | home/house | selected/default | vector/icon library | none | 24 | 2px stroke | brand/neutral | no circle fallback |
 
 ## Icon Pipeline Plan
 - Standard vector/library icons:
-- Custom generated icon sheet:
+- Batch icon asset pack:
+- Custom generated icon sheets:
 - Source-raster icon crops:
+- Bitmap-backed icon files:
 - Temporary icon placeholders:
 - Badge/count handling:
 - Dark mode icon handling:
 - Icon warnings to report:
 
 ## Visual Asset Inventory
-| asset | screen | role | aspect/crop | source | Figma handling |
-| --- | --- | --- | --- | --- | --- |
-| home hero | home | bitmap composite or hero photo | cover | generated/cropped | movable bitmap crop |
+| asset | screen | role | generated separately | aspect/crop | focal point | no-baked-ui rule | source | Figma handling |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| home hero | home | bitmap media or hero photo | yes/no | cover | center | no UI text/buttons/icons | generated/cropped | movable bitmap crop |
 
 ## Prototype Constraints
 - Must preserve:
@@ -103,19 +144,33 @@ Do not skip the brief for visual work. A short brief is acceptable for simple on
 | status bar | system-chrome | vector/text or bitmap composite if included in source | yes/partial | duplicate risk |
 | hero | bitmap-media/bitmap-composite | image crop plus editable overlays, or composite if inseparable | partial | crop/text duplication |
 
+## Layout Measurement Plan
+| id | screen | source rect sx/sy/sw/sh | figma rect x/y/w/h | parent | radius | z | strategy | tolerance | notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| hero-card | home |  |  | screen |  |  | shape + media crop | 2-3px |  |
+| bottom-nav | home |  |  | screen |  |  | component instances | 0-2px |  |
+
 ## Image Generation Prompt Plan
 - Screen prompt:
 - Negative prompt:
 - Companion asset sheet prompt:
 - Icon sheet prompt:
+- Batch icon source pack prompt:
 - Asset consistency requirements:
+- Text that must remain editable:
+- UI elements that must not be baked into media:
+- Separate media prompts:
 
 ## Figma Reconstruction Plan
 - Locked references:
 - Editable frames:
+- Source size and scale factor:
+- Layout measurement table path:
+- Key measured rectangles:
 - Bitmap crops:
 - Bitmap composites:
 - Vector icons:
+- Bitmap icon nodes:
 - Components:
 - Shared plugin data keys:
 - Verification screenshots:
@@ -134,12 +189,19 @@ Do not skip the brief for visual work. A short brief is acceptable for simple on
 - Candidate export size:
 - Manual visual check:
 - Region checklist:
+- Layout geometry check:
 - Pixel diff required:
 - Diff artifact paths:
 - Fidelity label target:
 
 ## Acceptance Criteria
 - Standard phone ratio:
+- Design source package completed:
+- Layout blueprint completed:
+- Typography tokens completed:
+- Component contract completed:
+- Icon contract completed:
+- Asset contract completed:
 - No placeholder icon circles:
 - Same-source images:
 - Figma layers movable/selectable:
@@ -148,8 +210,12 @@ Do not skip the brief for visual work. A short brief is acceptable for simple on
 - State matrix covered:
 - Multi-screen consistency checked:
 - Visual comparison completed:
+- Layout measurement completed:
+- Geometry drift within tolerance:
 - Visual diff level:
 - Icon pipeline completed:
+- Icon batch ledger completed:
+- Bitmap icons uploaded/backfilled:
 - Delivery package completed:
 - Known limitations:
 ```
@@ -178,6 +244,10 @@ If the product crosses industries, pick one primary industry and one secondary t
 
 For a first design set, choose screens that prove the core workflow rather than random marketing views.
 
+- If the user asks for an app and the app uses bottom tabs, the minimum screen set is one primary screen per tab. A four-tab app needs four tab screens; a five-tab app needs five tab screens. Do not stop at the home screen unless the user explicitly asks for a single page or a narrow flow.
+- Each tab screen should show the same bottom nav order, the correct selected tab state, and a meaningful first-screen view for that destination.
+- If a center tab is a publish/create action rather than a destination, produce the create/publish screen, sheet, or modal state instead of treating it as decorative.
+- If the product uses top tabs within a screen, top tabs do not automatically require separate app-level screens, but the selected top-tab state must be represented when it affects the requested workflow.
 - Social/community: home feed, publish/create, profile/detail, comments/report state.
 - Food delivery: home/search, restaurant detail, cart/checkout, order status.
 - Photo/video editor: import/permission, editor canvas, AI result compare, export/share.
@@ -191,8 +261,10 @@ For a first design set, choose screens that prove the core workflow rather than 
 Navigation must be planned before image generation.
 
 - Name every bottom tab and top action before generating the screen.
+- Complete the Tab-To-Screen Coverage table before generating any final screen image or Figma frame.
 - Assign a semantic icon to each destination; do not accept unlabeled circles.
 - Define selected, default, badge, disabled, and pressed states where relevant.
+- The bottom nav component must be identical across all tab screens except selected state, badges, and destination-specific disabled/permission states.
 - Keep bottom navigation hit areas at least `44pt` on iOS-like frames and `48dp` on Android-like frames.
 - Floating action buttons must not collide with bottom navigation labels or system home indicator.
 - If the source image includes baked navigation text/icons, decide whether it is a bitmap composite or whether to rebuild it as editable layers. Do not duplicate both.
@@ -246,6 +318,12 @@ Use `delivery-package.md` before final handoff.
 ## Asset And Icon Sheet Rules
 
 When using image generation for polished screens, generate or extract enough separate material to rebuild Figma.
+
+- The final screen prompt must be derived from the design source package, not only from mood/style words.
+- Generate separate clean media assets for photos, editor canvases, product images, maps, covers, hero scenes, avatars, and generated results when those areas must survive Figma reconstruction.
+- Generate custom icon sheets only for custom marks. Standard control icons should be vector/library-based in Figma.
+- Do not bake UI labels, buttons, tab icons, chips, counters, or controls into media assets unless they are genuine poster/photo content.
+- If exact layout, text sizes, or icon semantics are unknown, mark the design as `figma-ready-with-assumptions` or `visual-exploration-only` instead of pretending it is ready for 1:1 reconstruction.
 
 Create separate assets for:
 

@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "project": "FitPulse",
+  "status": "asset-pack-ready",
+  "screenSize": {
+    "logical": { "width": 393, "height": 852 },
+    "raster": { "width": 1179, "height": 2556 },
+    "scale": 3
+  },
+  "screens": [
+    {
+      "id": "01-home",
+      "name": "01 Home",
+      "industry": "健康健美",
+      "logicalFrame": { "width": 393, "height": 852 },
+      "rasterReference": {
+        "file": "assets/references/01-home-reference.png",
+        "targetNode": "Locked Reference / 01 Home"
+      },
+      "regions": [
+        {
+          "id": "hero-card",
+          "type": "bitmap-media",
+          "targetNode": "Bitmap Media / 01 Home / hero-card",
+          "assetId": "home-hero",
+          "rect": { "x": 24, "y": 146, "width": 345, "height": 128 },
+          "radius": 20,
+          "strategy": "image fill with editable text and CTA rebuilt above it"
+        },
+        {
+          "id": "metric-row",
+          "type": "component",
+          "targetNode": "Component / 01 Home / metric-row",
+          "rect": { "x": 24, "y": 288, "width": 345, "height": 72 },
+          "radius": 16,
+          "strategy": "three metric cards rebuilt from shape, icon, and text layers"
+        }
+      ],
+      "assets": [
+        {
+          "id": "home-reference",
+          "kind": "full-screen-reference",
+          "file": "assets/references/01-home-reference.png",
+          "targetNode": "Locked Reference / 01 Home",
+          "cropMode": "contain",
+          "focalPoint": "full screen",
+          "radius": 42,
+          "required": true,
+          "overlaySplit": "none"
+        },
+        {
+          "id": "home-hero",
+          "kind": "clean-media",
+          "file": "assets/generated/home-hero-athlete.png",
+          "targetNode": "Bitmap Media / 01 Home / hero-card",
+          "cropMode": "cover",
+          "focalPoint": "athlete center upper body",
+          "radius": 20,
+          "required": true,
+          "overlaySplit": "title, kcal, and CTA rebuilt as editable text/button layers"
+        }
+      ],
+      "icons": [
+        {
+          "id": "tab-home",
+          "batch": "navigation",
+          "label": "首页",
+          "role": "bottom tab",
+          "glyph": "home",
+          "source": "vector-library",
+          "targetNode": "Component / Icon / tab-home",
+          "size": { "width": 24, "height": 24 },
+          "state": "selected",
+          "strokeFill": "2px stroke, active brand green",
+          "opticalCenter": { "x": 12, "y": 12 },
+          "badgeAnchor": "none",
+          "scaleMode": "vector",
+          "required": true
+        }
+      ],
+      "textLayers": [
+        {
+          "id": "screen-title",
+          "text": "今天练什么？",
+          "targetNode": "Text / 01 Home / title",
+          "rect": { "x": 24, "y": 102, "width": 220, "height": 28 },
+          "fontSize": 22,
+          "lineHeight": 28,
+          "weight": 700,
+          "color": "#111827"
+        }
+      ]
+    }
+  ]
+}

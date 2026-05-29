@@ -63,6 +63,24 @@ Bitmap Crop / 03-result-generated-photo
 7. Apply the same radius, mask, focal point, scrim, overlay, and shadow as the source.
 8. Rebuild labels, buttons, icons, charts, and controls as editable layers above or around the crop.
 
+## Detail Crop Quality Gate
+
+Use this gate for small or detail-heavy visual regions before uploading crops to Figma.
+
+| check | pass condition |
+| --- | --- |
+| source match | crop comes from the approved screen or original asset, not a similar replacement |
+| bleed | source crop includes enough extra pixels for shadows, rounded corners, hairlines, and edge details |
+| focal point | subject position matches the reference at phone size |
+| mask | radius, circle crop, special shape, and clipping match the reference |
+| overlays | text, buttons, icons, and chips are rebuilt as editable layers unless genuinely part of the media |
+| quality | no visible stretch, blur, watermark, image-model artifact, edge clipping, or wrong subject |
+| naming | asset and Figma node share a stable semantic id |
+
+Inspect the crop at the target display size and at 2x zoom. Detail crops that fail this gate should be regenerated, repaired, or marked as a blocking fidelity issue. Do not hide the failure by placing a new unrelated photo.
+
+For source-pixel cropping, add `2-8px` bleed around the measured region when possible, then apply the exact measured mask in Figma. This protects soft shadows and rounded edges without changing the visible layout.
+
 ## Crop Script
 
 Use `scripts/export-crops.js` when crop coordinates are known or can be measured from the approved source image.
@@ -121,6 +139,8 @@ Use the ledger in the Figma import spec so every bitmap crop has a clear source,
 - Decorative images do not compete with the primary task.
 - Functional images have an accessibility purpose or label in implementation notes.
 - Generated image artifacts, stray text, watermarks, or wrong logos are rejected.
+- Small thumbnails, avatars, badges, and detail illustrations match the approved reference and are not treated as disposable placeholders.
+- Crops that include UI overlays have a clear reason; otherwise overlays are rebuilt as editable text, icons, chips, buttons, or badges above the media.
 
 ## Industry Notes
 

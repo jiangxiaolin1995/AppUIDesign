@@ -1,0 +1,28 @@
+{
+  "source": "examples/measurement-sample-screen.svg",
+  "outDir": "tmp/measurement-crops",
+  "coordinateSpace": "source-px",
+  "scale": 1,
+  "crops": [
+    {
+      "name": "hero-card",
+      "type": "layout-reference",
+      "x": 24,
+      "y": 104,
+      "width": 345,
+      "height": 196,
+      "radius": 28,
+      "figmaHandling": "Use only as a reference crop; rebuild the card surface and text as editable layers."
+    },
+    {
+      "name": "bottom-button",
+      "type": "layout-reference",
+      "x": 24,
+      "y": 720,
+      "width": 345,
+      "height": 56,
+      "radius": 28,
+      "figmaHandling": "Use only as a reference crop; rebuild the button surface and label as editable layers."
+    }
+  ]
+}

@@ -24,13 +24,13 @@ const SPEC = {
 };
 
 const ASSETS = {
-  referenceHome: { role: "locked-reference", description: "Approved full-screen raster reference" },
-  homeHero: { role: "bitmap-composite", description: "Exact source crop for the hero region" }
+  "home-reference": { role: "locked-reference", description: "Approved full-screen raster reference" },
+  "home-hero": { role: "bitmap-media", description: "Clean media or exact source crop for the hero region" }
 };
 
 const imageHashes = {
-  referenceHome: "",
-  homeHero: ""
+  "home-reference": "",
+  "home-hero": ""
 };
 
 const ICONS = [
@@ -39,13 +39,26 @@ const ICONS = [
   { key: "profile", label: "Profile", source: "vector", required: true }
 ];
 
+// Optional manifest-driven input. Replace null with DESIGN_MANIFEST from
+// scripts/build-figma-packet.js to generate reference/editable frames, media
+// rectangles, and text boxes directly from the asset manifest.
+const DESIGN_MANIFEST = null;
+
 const audit = {
   pageId: null,
   frames: {},
   imageNodes: {},
+  referencePairs: [],
+  assetFills: [],
   components: [],
   icons: ICONS,
   warnings: [],
+  layerEditability: {
+    fullScreenScreenshotUsedAsVisible: false,
+    textLayerCount: 0,
+    vectorIconCount: 0,
+    bitmapMediaCount: 0
+  },
   layerCounts: {}
 };
 
@@ -128,9 +141,19 @@ function media(name, assetKey, x, y, width, height, radius = 0, mode = "FILL") {
   node.y = y;
   node.resize(width, height);
   node.cornerRadius = radius;
-  node.fills = imageHashes[assetKey] ? [{ type: "IMAGE", imageHash: imageHashes[assetKey], scaleMode: mode }] : imagePaint("", SPEC.color.surfaceSoft);
+  const hasImageHash = Boolean(imageHashes[assetKey]);
+  node.fills = hasImageHash ? [{ type: "IMAGE", imageHash: imageHashes[assetKey], scaleMode: mode }] : imagePaint("", SPEC.color.surfaceSoft);
   tag(node, ASSETS[assetKey]?.role || "bitmap-media", { assetKey, mode, description: ASSETS[assetKey]?.description || "" });
   audit.imageNodes[assetKey] = node.id;
+  audit.assetFills.push({
+    assetKey,
+    nodeId: node.id,
+    nodeName: node.name,
+    fillType: hasImageHash ? "IMAGE" : "PLACEHOLDER",
+    scaleMode: mode,
+    hasImageHash
+  });
+  if (ASSETS[assetKey]?.role !== "locked-reference") audit.layerEditability.bitmapMediaCount += 1;
   return node;
 }
 
@@ -148,6 +171,7 @@ function text(name, value, x, y, size, color = SPEC.color.text, font = SPEC.font
     node.resize(width, node.height);
   }
   tag(node, "editable-text");
+  audit.layerEditability.textLayerCount += 1;
   return node;
 }
 
@@ -156,6 +180,7 @@ function lineIcon(name, strokes) {
   group.name = `Component / Icon / ${name}`;
   tag(group, "vector-icon");
   audit.components.push({ name: group.name, id: group.id, kind: "icon" });
+  audit.layerEditability.vectorIconCount += 1;
   return group;
 }
 
@@ -215,14 +240,89 @@ function lockedReference(page, assetKey, name, x, y) {
   return frame;
 }
 
+function frameSizeFromManifest(screen) {
+  return {
+    width: Number(screen.logicalFrame?.width || SPEC.frame.width),
+    height: Number(screen.logicalFrame?.height || SPEC.frame.height)
+  };
+}
+
+function resizeFrameFromManifest(frame, screen) {
+  const size = frameSizeFromManifest(screen);
+  frame.resize(size.width, size.height);
+  tag(frame, "phone-frame", size);
+}
+
+function assetRole(asset) {
+  if (asset.kind === "full-screen-reference") return "locked-reference";
+  if (asset.kind === "clean-media") return "bitmap-media";
+  if (asset.kind === "custom-icon-sheet") return "bitmap-icon-sheet";
+  return "bitmap-media";
+}
+
+function mediaFromManifest(parent, screen, region) {
+  const asset = (screen.assets || []).find((item) => item.id === region.assetId);
+  if (!asset) {
+    audit.warnings.push(`Region ${screen.id}/${region.id} references missing asset ${region.assetId}.`);
+    return null;
+  }
+  ASSETS[asset.id] = { role: assetRole(asset), description: asset.overlaySplit || asset.kind };
+  const r = region.rect;
+  return append(parent, media(`${screen.name} / ${region.id}`, asset.id, r.x, r.y, r.width, r.height, region.radius || asset.radius || 0, asset.cropMode === "contain" ? "FIT" : "FILL"));
+}
+
+function textFromManifest(parent, screen, item) {
+  const r = item.rect;
+  return append(parent, text(`${screen.name} / ${item.id}`, item.text, r.x, r.y, item.fontSize, item.color || SPEC.color.text, item.weight >= 700 ? SPEC.font.bold : item.weight >= 500 ? SPEC.font.medium : SPEC.font.regular, r.width));
+}
+
+function buildScreenPairFromManifest(page, screen, x, y) {
+  const size = frameSizeFromManifest(screen);
+  const refAsset = (screen.assets || []).find((item) => item.kind === "full-screen-reference") || screen.assets?.[0];
+  if (!refAsset) throw new Error(`Screen ${screen.id} has no reference asset.`);
+  ASSETS[refAsset.id] = { role: "locked-reference", description: "Approved full-screen raster reference" };
+
+  const ref = makePhoneFrame(`Locked Reference / ${screen.name}`, x, y, "#EDEDEB");
+  resizeFrameFromManifest(ref, screen);
+  append(ref, media(`${screen.name} / full-reference`, refAsset.id, 0, 0, size.width, size.height, SPEC.frame.radius, "FIT"));
+  ref.locked = true;
+  page.appendChild(ref);
+
+  const editable = makePhoneFrame(`Editable Reconstruction / ${screen.name}`, x + size.width + 40, y);
+  resizeFrameFromManifest(editable, screen);
+  page.appendChild(editable);
+
+  for (const region of screen.regions || []) {
+    if (region.type === "bitmap-media") mediaFromManifest(editable, screen, region);
+    if (region.type === "layout" || region.type === "component") {
+      const r = region.rect;
+      append(editable, rect(region.targetNode || `Component / ${screen.name} / ${region.id}`, r.x, r.y, r.width, r.height, SPEC.color.surface, region.radius || 0));
+      audit.components.push({ name: region.targetNode || region.id, kind: region.type });
+    }
+  }
+  for (const item of screen.textLayers || []) textFromManifest(editable, screen, item);
+  for (const icon of screen.icons || []) audit.icons.push({ key: icon.id, label: icon.label, source: icon.source, status: icon.source === "placeholder" ? "warning" : "planned" });
+
+  audit.referencePairs.push({
+    screen: screen.name,
+    referenceFrameId: ref.id,
+    editableFrameId: editable.id,
+    referenceName: `Locked Reference / ${screen.name}`,
+    editableName: `Editable Reconstruction / ${screen.name}`,
+    sameSize: ref.width === editable.width && ref.height === editable.height,
+    logicalSize: size
+  });
+  return { ref, editable };
+}
+
 function editableHome(page, x, y) {
-  const frame = makePhoneFrame("Editable / Home", x, y);
+  const frame = makePhoneFrame("Editable Reconstruction / Home", x, y);
   page.appendChild(frame);
 
   append(frame, text("Time", "9:41", 32, 18, 15, SPEC.color.text, SPEC.font.bold));
   append(frame, text("App Name", "App Name", 24, 62, 28, SPEC.color.text, SPEC.font.bold));
   iconSearch(frame, 346, 76, SPEC.color.text);
-  append(frame, media("Home Hero", "homeHero", 24, 150, 345, 160, 18));
+  append(frame, media("Home Hero", "home-hero", 24, 150, 345, 160, 18));
   append(frame, rect("Component / Card / Feed", 16, 342, 361, 148, SPEC.color.surface, 18));
   append(frame, text("Feed Title", "Editable card title", 32, 366, 18, SPEC.color.text, SPEC.font.bold, 250));
   append(frame, text("Feed Meta", "Metadata and supporting copy", 32, 396, 13, SPEC.color.textMuted, SPEC.font.regular, 280));
@@ -247,11 +347,30 @@ function countLayers(root) {
 
 const page = makePage();
 await figma.setCurrentPageAsync(page);
-const reference = lockedReference(page, "referenceHome", "Home", 120, 120);
-const editable = editableHome(page, 120 + SPEC.frame.width + 40, 120);
+let reference;
+let editable;
+if (DESIGN_MANIFEST?.screens?.length) {
+  const pair = buildScreenPairFromManifest(page, DESIGN_MANIFEST.screens[0], 120, 120);
+  reference = pair.ref;
+  editable = pair.editable;
+} else {
+  reference = lockedReference(page, "home-reference", "Home", 120, 120);
+  editable = editableHome(page, 120 + SPEC.frame.width + 40, 120);
+  audit.referencePairs.push({
+    screen: "Home",
+    referenceFrameId: reference.id,
+    editableFrameId: editable.id,
+    referenceName: "Locked Reference / Home",
+    editableName: "Editable Reconstruction / Home",
+    sameSize: reference.width === editable.width && reference.height === editable.height,
+    logicalSize: { width: SPEC.frame.width, height: SPEC.frame.height }
+  });
+}
 audit.layerCounts.reference = countLayers(reference);
 audit.layerCounts.editable = countLayers(editable);
-audit.warnings.push("Replace placeholder copy, icon builders, and ASSETS/imageHashes before delivery.");
+if (audit.assetFills.some((item) => item.fillType !== "IMAGE")) {
+  audit.warnings.push("Fill ASSETS/imageHashes with upload_assets hashes before delivery.");
+}
 
 figma.viewport.scrollAndZoomIntoView([reference, editable]);
 audit;

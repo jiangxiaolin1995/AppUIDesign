@@ -25,7 +25,7 @@ Sources:
 
 - [Android mobile UI design](https://developer.android.com/design/ui/mobile)
 - [Adapt layouts](https://developer.android.com/design/ui/mobile/guides/layout-and-content/adapt-layout)
-- [Android touch target size](https://support.google.com/accessibility/android/answer/7101858)
+- [Android accessibility and touch target guidance](https://developer.android.com/guide/topics/ui/accessibility/apps?hl=en)
 - [Material accessibility](https://m2.material.io/design/usability/accessibility.html)
 - [minimumInteractiveComponentSize](https://developer.android.com/reference/kotlin/androidx/compose/material3/minimumInteractiveComponentSize.modifier)
 

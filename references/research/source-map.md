@@ -2,6 +2,8 @@
 
 Use this file as the research base for mobile app UI design work. Prefer official documentation and primary company materials; mark sources that are case studies rather than normative guidelines.
 
+Last broad local review: 2026-05-29. Run `scripts/check-links.js` and update `source-refresh.md` notes before relying on exact current link availability, category counts, or platform-specific current behavior.
+
 ## Global Platform Sources
 
 ### Apple
@@ -17,7 +19,7 @@ Use for native iOS expectations: hierarchy, harmony with system UI, Dynamic Type
 ### Google / Android / Material
 
 - Android mobile UI design: https://developer.android.com/design/ui/mobile
-- Android touch target size: https://support.google.com/accessibility/android/answer/7101858
+- Android accessibility and touch target guidance: https://developer.android.com/guide/topics/ui/accessibility/apps?hl=en
 - Material Design 3: https://m3.material.io/
 - Material accessibility: https://m2.material.io/design/usability/accessibility.html
 - Material bottom navigation: https://m2.material.io/components/bottom-navigation/ios

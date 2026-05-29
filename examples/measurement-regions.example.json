@@ -1,0 +1,12 @@
+{
+  "regions": [
+    { "name": "hero-card", "x": 24, "y": 104, "width": 345, "height": 196 },
+    { "name": "left-card", "x": 24, "y": 324, "width": 160, "height": 132 },
+    { "name": "right-card", "x": 209, "y": 324, "width": 160, "height": 132 },
+    { "name": "bottom-button", "x": 24, "y": 720, "width": 345, "height": 56 }
+  ],
+  "samples": [
+    { "name": "background", "x": 12, "y": 12 },
+    { "name": "button-fill", "x": 48, "y": 748 }
+  ]
+}

@@ -6,6 +6,174 @@ Use this file when a generated mobile design image, user screenshot, prototype r
 
 The approved raster image is the visual source of truth. The Figma deliverable must match that image first, then expose the design as movable materials. Do not replace a beautiful image-led design with a simplified redraw, and do not paste one full-screen screenshot as the editable result.
 
+Layer editability and layout fidelity are separate requirements. A Figma frame can have editable layers and still fail if the measured geometry is wrong. Do not start from approximate positions; build from a measurement table.
+
+When a user asks to convert a generated image into Figma, the first Figma page must prove fidelity before reinterpretation:
+
+1. Put the locked approved image on the left at the target logical phone size.
+2. Put the reconstruction frame on the right at the exact same size.
+3. Reuse exact source crops for every media/photo/complex region.
+4. Rebuild text, icons, cards, charts, and controls as editable layers whenever clean separation is possible.
+5. Rebuild user-facing UI as editable Figma layers. Text, cards, buttons, chips, navigation, chart marks, and icons must not be baked into bitmap slices in the final deliverable.
+6. Use bitmap nodes only for true media: photos, illustrations, generated AI results, maps, covers, or complex non-UI artwork.
+7. If clean media is missing, create/regenerate clean media assets or mark the media as an exception. Do not call bitmap slicing a finished editable 1:1 reconstruction.
+8. Do not call an independently redesigned Figma screen a conversion or 1:1 reconstruction.
+
+## Source Asset Pack Intake
+
+Before writing or updating Figma, inspect the source asset pack:
+
+| required item | purpose | failure if missing |
+| --- | --- | --- |
+| full-screen reference PNG per screen | locked left-side comparison source | no 1:1 claim allowed |
+| clean media assets | right-side image fills for photos, thumbnails, maps, canvases, covers, AI results | grey boxes, changed photos, or bitmap-composite fallback |
+| batch icon asset pack, custom icon sheet, or vector icon contract | accurate icon reconstruction | wrong glyphs, missing states, or placeholder circles |
+| asset manifest | maps files to Figma node names, crop modes, focal points, radii, and overlay splits | layout and image backfill become guesswork |
+| measurement table | maps source rectangles to Figma rectangles | componentized but misaligned result |
+
+Rules:
+
+- Load the asset manifest before creating image nodes.
+- Create image fills from manifest files, not from unrelated replacement assets.
+- For each manifest row, name the resulting node exactly as the target node or with a clear child suffix.
+- After upload/backfill, check that each media and bitmap icon node uses `IMAGE` fill, expected scale mode, and expected mask/radius.
+- Grey rectangles, gradient placeholders, empty fills, or different photos are blocking fidelity issues.
+- If clean media does not exist, regenerate it or record the row as `asset-pack-partial`; do not silently replace it with a nearby-looking image.
+- If generated or cropped icon assets do not exist, create them before Figma. Do not repair missing custom icons by drawing unrelated vector shapes during reconstruction.
+
+## Reference Pair Requirement
+
+Every image-to-Figma conversion page must start with a comparison pair:
+
+```text
+Locked Reference / 01 Home        Editable Reconstruction / 01 Home
+[approved full-screen PNG]        [editable Figma layers]
+```
+
+Rules:
+
+- Place the locked original on the left and the editable reconstruction on the right.
+- Use identical logical phone size, safe area, status bar assumptions, and scale.
+- Lock the left reference image and keep it visible until screenshot verification is done.
+- The right frame must be built from editable text, shapes, vectors, components, and independent bitmap media nodes.
+- Do not place only a gallery of editable screens without their paired originals when the user asked for 1:1 or image-to-Figma conversion.
+- If the pair is absent, label the result `editable draft` even if the Figma layers are selectable.
+
+## Layout Measurement Protocol
+
+Use this protocol before writing Figma JS or dragging layers by hand.
+
+1. Run `scripts/measure-screenshot.js` on the approved image or user screenshot. Save `measurement-report.json`, `measurement-report.md`, and `measurement-overlay.png` into the delivery package.
+2. Record the source raster size and target Figma size.
+3. Compute scale factors:
+   - `scaleX = figmaWidth / sourceWidth`
+   - `scaleY = figmaHeight / sourceHeight`
+   - If they differ, document why and do not stretch media.
+4. Create a measurement table for every visible region:
+   - screen chrome
+   - nav/header
+   - hero/media
+   - cards
+   - repeated rows
+   - buttons and chips
+   - charts
+   - bottom navigation
+   - home indicator
+5. For each region, record:
+   - source rectangle: `sx`, `sy`, `sw`, `sh`
+   - logical rectangle: `x`, `y`, `w`, `h`
+   - parent/container
+   - z-order
+   - radius
+   - stroke
+   - shadow/effect
+   - clip/mask behavior
+   - text baseline or vertical alignment notes
+   - media crop/focal point if applicable
+6. Use measured rectangles to place component instances. A clean component master does not excuse wrong instance geometry.
+7. After building each major region, compare against the locked reference before moving on.
+8. If a region is visibly off, fix the coordinates, size, radius, padding, or crop before styling new regions.
+
+CLI example:
+
+```bash
+node scripts/measure-screenshot.js \
+  --image assets/generated/01-home-reference.png \
+  --regions specs/01-home-regions.json \
+  --out specs/measurements/01-home
+```
+
+If no region file exists yet, run the script once without `--regions`, inspect `measurement-overlay.png`, then create the region JSON for the main modules and rerun it.
+
+Measurement table format:
+
+| id | type | parent | source rect sx/sy/sw/sh | figma rect x/y/w/h | radius | z | strategy | tolerance | status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| hero-card | layout/media | screen | 28/214/796/534 | 13/99/367/247 | 22 | 20 | shape + media crop | 2px | pending |
+
+Recommended tolerances for editable reconstruction:
+
+- Frame size: exact.
+- Major section y position: `0-2px`.
+- Cards, bars, and tab containers: `0-3px`.
+- Text baseline: `0-3px`, allowing font substitution differences.
+- Icon size/position: `0-2px`.
+- Media crop focal point: visually same; geometry `0-3px`.
+- Shadows and generated lighting: visually close; document if not exact.
+
+Any geometry drift above tolerance is a `major` issue unless intentionally documented.
+
+## Detail Media Fidelity Protocol
+
+Use this protocol for every detail image, not only large heroes. Small media is often where a reconstruction stops looking like the approved design.
+
+Create one ledger row for each photo, avatar, thumbnail, cover, product shot, map, editor canvas, generated result, mascot, badge illustration, and rich decorative detail:
+
+| id | role | source | source rect sx/sy/sw/sh | bleed | figma rect x/y/w/h | crop mode | focal point | mask/radius | overlays | status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| feed-thumb-01 | thumbnail | approved screen crop | 672/1240/384/252 | 6px | 224/413/128/84 | cover | dog face center | r12 | none | pass |
+
+Rules:
+
+- Prefer original standalone assets when available. If not, crop from the approved screen at source resolution.
+- Add `2-8px` source-pixel bleed when shadows, rounded corners, hairlines, glows, or object edges sit near the crop boundary, then clip inside Figma to the measured rectangle.
+- Preserve the same focal point. Face, product, dish, pet, map route, before/after result, and editor subject must remain in the same visual position.
+- Preserve the same mask, radius, scrim, tint, shadow, and overlay stack. UI labels and buttons over media should be editable layers unless they are genuinely printed into a poster or photo.
+- Reject crops with accidental baked UI text, doubled labels, wrong subject, watermarks, image-model artifacts, or changed photos. Regenerate or repair the asset before calling the frame faithful.
+- Name media nodes `Bitmap Crop / {screen} / {role}` and store the crop id in shared plugin data when using Figma JS.
+
+If a region mixes media and UI controls, split it: keep the photo/generated artwork as `bitmap-media`, then rebuild controls, text, badges, gradients, and chips above it as editable layers. If splitting would destroy the approved appearance, mark the region as `Bitmap Composite / ...` and record why.
+
+## Layout Stability Gate
+
+Editable layers are not enough if the frame falls apart when the user selects, edits, or replaces a part. Run this gate after Figma creation.
+
+- Every top-level module and repeated component instance uses a measured `x/y/w/h`, not auto-layout guesses copied from a clean master.
+- Text nodes have fixed boxes, intentional wrapping/clipping, and line heights that match the reference. Do not let dynamic text resize cards unless the reference design requires it.
+- Media nodes preserve aspect ratio and crop mode. Replacing a crop should not resize or move the surrounding card.
+- Icon groups have stable bounding boxes and optical centers inside their hit areas.
+- Badges are anchored to the intended icon or avatar, not to the whole navigation item or card.
+- Containers with masks, shadows, blurs, and rounded corners clip consistently in the same place as the source image.
+- Component masters may be tidy, but placed instances must keep measured padding, gaps, and size. If the master differs from the reference, override the instance and note it.
+
+In the audit result, include `layoutStability: pass|warning|fail` and list any shifted node ids or regions.
+
+## Asset Extraction Boundary
+
+When the user says to "抠图" for Figma reconstruction, interpret it as extracting source materials, not slicing UI screenshots into panels.
+
+Extract as bitmap:
+
+- Photos, hero media, avatars, product shots, covers, maps, posters, generated results, rich illustrations, mascots, non-reproducible textures, and complex lighting effects.
+
+Rebuild as Figma layers/components:
+
+- Containers, cards, sheets, buttons, chips, navigation bars, bottom tabs, text, icons, charts, progress rings, tables, rows, badges, controls, safe-area chrome, and home indicators.
+
+If a container has a special texture or lighting that cannot be rebuilt, separate the effect as a small bitmap/effect layer while keeping the container geometry editable.
+
+Bottom tabs require a componentized reconstruction: tab bar container, tab item components, vector icons, editable labels, selected/default states, optional badges, and safe-area/home-indicator layers. A bottom tab screenshot crop is a failure for finished editable reconstruction.
+
 ## Fidelity Levels
 
 Use these labels honestly in handoff notes:
@@ -14,6 +182,7 @@ Use these labels honestly in handoff notes:
 - `Editable draft`: a Figma reconstruction with movable layers, but visible differences remain in layout, crop, icons, typography, or density.
 - `High-fidelity editable`: Figma layers are editable and broadly match the approved image at phone scale. Some minor icon, shadow, or spacing drift may remain and must be listed.
 - `Pixel-faithful`: a Figma screenshot was compared against the approved raster at the same logical size, and major regions match: screen geometry, media crop, color, typography hierarchy, icon placement, spacing, bottom nav, and safe areas. Any bitmap-composite regions are documented.
+- `Temporary bitmap-composite fallback`: the approved image is reconstructed from movable bitmap-composite regions because no clean underlying assets exist. This is a diagnostic or bridge artifact only; it is not a finished editable 1:1 Figma reconstruction.
 
 Do not use `1:1`, `pixel-perfect`, or `pixel-faithful` for an editable draft. If no screenshot comparison was performed, the highest allowed label is `high-fidelity editable`.
 
@@ -24,9 +193,10 @@ Every image-to-Figma conversion must contain:
 - Locked reference frame: the full approved screen image at the same logical frame size.
 - Editable reconstruction frame: the visible deliverable, rebuilt from layers.
 - Component kit or reusable groups: navigation, tabs, chips, cards, buttons, lists, metrics, editor tools, sheets, and repeated content modules.
-- Icon inventory: one explicit row for every tab icon, toolbar icon, action icon, badge, empty-state icon, and custom glyph. Each row states whether it will be rebuilt as vector, imported from a known icon library, generated separately, or cropped from the source.
+- Icon inventory and batch ledger: one explicit row for every tab icon, toolbar icon, action icon, badge, empty-state icon, and custom glyph. Each row states the batch, state, source, asset file if bitmap-backed, target node, optical center, and badge anchor.
 - Bitmap crop assets: one separate image node for each photo, media thumbnail, avatar, editor canvas, generated result, product shot, cover, or complex illustration region.
 - Fidelity ledger: what is editable, what is bitmap-backed, what was intentionally preserved as a crop, and what limitations remain.
+- Route declaration: `editable 1:1 reconstruction`, `editable reconstruction with media exceptions`, or `temporary bitmap-composite fallback`.
 
 Use `figma-component-system.md` to decide component names, states, component-like groups, and component ledger requirements.
 
@@ -37,6 +207,7 @@ Before drawing, classify every visible region:
 - `layout`: backgrounds, cards, sheets, separators, grids, safe areas, nav containers, button surfaces, tab indicators.
 - `editable-text`: titles, labels, metadata, counters, body copy, prices, status copy, chip text, CTA labels.
 - `vector-icon`: icons, simple glyphs, badges, progress strokes, controls, rating marks, simple charts.
+- `bitmap-icon`: generated or cropped custom icon assets that remain independent and movable in Figma.
 - `bitmap-media`: photos, food/product images, pet or people photos, covers, thumbnails, generated AI results, editor canvases, illustrations, map tiles, posters.
 - `bitmap-composite`: a complex region that mixes image, lighting, blur, shadows, or generated texture and cannot be cleanly separated without changing the visual. This is allowed only as a movable region, never as the whole screen.
 - `effect`: scrim, blur plate, shadow, tint overlay, gradient fade, mask, clipped rounded container.
@@ -50,15 +221,47 @@ Do this before creating the first raster screen. The image generation prompt sho
 
 1. Draft the target screen as a layer plan: chrome, navigation, tabs, cards, media, copy, icons, overlays, sheets, and states.
 2. Mark every region as `editable-vector`, `editable-text`, `bitmap-media`, `bitmap-composite`, or `effect`.
-3. Create an icon inventory before generation. Do not let the image model invent generic circles for tab icons or action icons.
+3. Create an icon inventory and batch ledger before generation. Do not let the image model invent generic circles for tab icons or action icons.
 4. Decide which visuals need separate assets:
    - full reference screen
    - clean photo/media assets
    - avatars and thumbnails
    - complex hero composites
-   - custom icon set, if the icons are brand-specific or illustrated
-5. Ask the image model for the app screen and, when needed, ask for a companion asset sheet with clean icons or media crops. The screen image establishes composition; the asset sheet supports faithful Figma reconstruction.
+   - navigation, toolbar, category, editor, status, and brand/custom icon batches
+5. Ask the image model for icon sheets and clean media assets before the app screen when those assets are custom. Then ask for the app screen to use the same icon style and layout contract. The screen image establishes composition; the asset sheets support faithful Figma reconstruction.
 6. If the user supplied a prototype or screenshot, preserve the original navigation count, tab meanings, and major spatial relationships. Do not simplify a five-tab app into five circles.
+
+## Bitmap Fallback Is Not Completion
+
+Use this fallback only when the approved visual is a flattened raster and clean assets are unavailable. It is not considered a finished response to a user asking for editable 1:1 Figma layers.
+
+1. Keep the full raster as `Locked Reference / ...`.
+2. Segment the source image by meaningful modules: chrome, nav, hero, metrics, content list, tab bar, bottom sheet, modal, toolbar, or editor canvas.
+3. Crop each segment at source resolution and upload it as a separate asset.
+4. Reassemble the reconstruction from these crop assets at the same logical coordinates.
+5. Name each layer `Bitmap Composite / Screen / Region`.
+6. Store source metadata on the node when possible: source screen, crop region, scale, and classification.
+7. Add a fidelity ledger explaining which parts are bitmap-backed and why.
+8. Preserve or create a separate editable reconstruction so the user still has editable text/components to work from.
+9. Continue toward a true editable reconstruction by regenerating clean media assets or replacing bitmap-composite UI regions with Figma text, vectors, shapes, and components.
+
+This fallback is acceptable only as a temporary visual bridge. It is not a substitute for a clean asset-backed editable reconstruction when the user expects every text label, component, icon, and chart to be editable.
+
+## Editable 1:1 Reconstruction Standard
+
+For a finished editable 1:1 reconstruction:
+
+- Status/system chrome may be rebuilt as text/vector, or omitted only if the target platform expects live system chrome.
+- Navigation bars, tab bars, toolbars, and bottom sheets are shape/vector/text layers.
+- Cards, chips, buttons, tags, progress rings, bars, charts, and list rows are shape/vector/text layers.
+- Container fills, strokes, radii, shadows, blur plates, scrims, masks, and padding are recreated as Figma properties or effect layers, not cropped from the screenshot.
+- Bottom navigation is built from tab item components with editable vector icons and labels.
+- All user-facing text is editable text unless it is part of a real poster/photo/media asset.
+- Icons are vectors/components or exact bitmap icon crops only when the source icon is custom and cannot be drawn faithfully.
+- Photos, hero images, thumbnails, avatars, covers, editor canvases, AI results, and rich illustrations are independent bitmap media nodes with matching crop/mask/focal point.
+- The full reference image remains locked beside the reconstruction.
+- A fidelity ledger lists any media exceptions and any remaining drift.
+- A layout measurement table exists and the reconstructed frame was checked against it.
 
 ## Icon Handling Rules
 
@@ -68,11 +271,25 @@ For detailed icon source decisions, generated icon sheets, source-raster crops, 
 
 - For standard icons such as home, search, back, close, share, notification, message, profile, settings, cart, map, filter, play, camera, undo, export, and plus, rebuild them as vector icons or import from the project's icon library. Do not approximate them with circles, emoji, or unrelated glyphs.
 - For custom brand icons such as paw tabs, mascot marks, creator-tool icons, game icons, or stylized category marks, either generate a clean icon asset sheet at the same time as the screen or crop the exact icon from the source raster.
+- Prefer generating the clean icon asset sheet before the final screen, then reference the same icon style in the screen prompt and manifest.
 - For bottom tabs, every tab must have the correct semantic icon and selected/unselected states. Placeholder circles are allowed only in wireframes, never in a high-fidelity Figma handoff.
+- In Figma, bitmap-backed custom icons must become independent `Bitmap Icon / ...` nodes with `IMAGE` fills; vector-backed icons must become grouped `Component / Icon / ...` nodes.
 - Preserve icon size, stroke weight, optical alignment, active color, inactive color, badge placement, and hit area.
 - Keep icons independent from labels so the user can move, recolor, or replace them in Figma.
 - If an icon is cropped from the raster source, name it `Bitmap Icon / ...`; if it is rebuilt, name it `Vector / ...` or `Component / Icon / ...`.
 - If a faithful icon cannot be produced in the current pass, mark it as a fidelity issue in the ledger instead of silently substituting a different shape.
+
+Icon accuracy gate:
+
+| id | role | expected glyph | source | state | box | stroke/fill | optical center | badge anchor | status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| tab-discover | bottom tab | compass | vector/library | default | 24x24 | 2px neutral stroke | 12/12 | none | pass |
+
+- Check semantic meaning first: `发现` should not reuse a home icon, `发布` should not become a random circle, and `消息` needs a message/chat glyph with badge support when the source has a badge.
+- Check geometry second: icon visual size, stroke/fill weight, active/inactive color, optical center, and badge position should match the approved image within the icon tolerance.
+- Check state third: selected/default/disabled/pressed variants should not accidentally share the same color or fill behavior.
+- If the icon is custom and cannot be redrawn accurately, use an exact bitmap icon crop or generate a clean icon sheet. Record it as bitmap-backed; do not replace it with a nearby library icon.
+- A high-fidelity handoff fails if any final icon layer is named `Placeholder / ...` or uses an unrelated glyph without a ledger warning and user-facing note.
 
 ## Asset Crop Rules
 
@@ -85,6 +302,7 @@ Use original source assets when available. If only the full raster screen exists
 - Use contain behavior only for editor canvases, before/after comparisons, document previews, QR codes, maps that must show exact bounds, and objects where cropping destroys meaning.
 - Do not substitute a different photo during Figma reconstruction. If the photo is wrong, regenerate or crop the correct source first.
 - Keep each avatar/photo/media area as its own movable bitmap node so it can be replaced later.
+- For detail crops, inspect the resulting crop at the intended Figma size and at 2x zoom. Reject fuzzy crops, edge clipping, distorted subjects, broken rounded corners, and visible mismatches with the locked reference.
 
 ## Size Matching Rules
 
@@ -117,11 +335,14 @@ The Figma JavaScript must be explicit enough that another pass can inspect and f
 Minimum requirements:
 
 - Define constants for frame size, scale, safe areas, spacing, radius, colors, typography, and asset keys.
+- Define measured layout rectangles in a `MEASUREMENTS` object and place nodes from it. Avoid freehand numeric coordinates scattered through the script.
+- Define `DETAIL_MEDIA` and `ICON_MAP` objects for crop ids, icon roles, states, sources, expected bounds, and fallback warnings.
 - Load fonts up front and use only loaded font names.
 - Use helper functions for fills, text, frames, cards, media, icons, badges, and component-like groups.
 - Name every node by role: `Locked Reference /`, `Editable Screen /`, `Component /`, `Text /`, `Vector /`, `Bitmap Crop /`, `Bitmap Composite /`, `Effect /`, `System Chrome /`.
 - Put asset keys in shared plugin data so image nodes can be found and backfilled after upload.
 - Return a structured audit object: page id, frame ids, image node ids, component ids, icon inventory, layer counts, warnings, and next verification steps.
+- Return detail-media and layout-stability status in the audit object, including any crop mismatch, placeholder icon, or measured-geometry drift.
 - Never set `figma.currentPage = page`; use `await figma.setCurrentPageAsync(page)`.
 - Do not silently substitute placeholder circles for icons. If a proper icon cannot be drawn, add a warning and name the layer as a placeholder.
 
@@ -172,6 +393,25 @@ const ICONS = [
   { key: "profile", label: "Profile", role: "bottom-tab", source: "vector", states: ["default"] }
 ];
 
+const MEASUREMENTS = {
+  screen: { x: 0, y: 0, w: 393, h: 852 },
+  header: { x: 20, y: 44, w: 353, h: 52, tolerance: 2 },
+  heroCard: {
+    source: { sx: 28, sy: 214, sw: 796, sh: 534 },
+    figma: { x: 13, y: 99, w: 367, h: 247 },
+    radius: 22,
+    type: "layout + bitmap-media",
+    tolerance: 3
+  },
+  bottomNav: {
+    source: { sx: 0, sy: 1650, sw: 853, sh: 194 },
+    figma: { x: 0, y: 763, w: 393, h: 89 },
+    radius: 28,
+    type: "component",
+    tolerance: 2
+  }
+};
+
 const imageHashes = {
   referenceHome: "",
   homeHero: "",
@@ -188,6 +428,7 @@ const audit = {
   warnings: [],
   layerCounts: {},
   verification: [
+    "Check every node against MEASUREMENTS before visual diff.",
     "Export each editable frame at 393x852.",
     "Compare against the locked reference: chrome, hero, media, typography, bottom navigation, and safe areas.",
     "Do not claim 1:1 until region-level drift is checked."

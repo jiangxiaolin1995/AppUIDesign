@@ -1,0 +1,46 @@
+{
+  "pageId": "0:1",
+  "referencePairs": [
+    {
+      "screen": "01 Home",
+      "referenceFrameId": "10:1",
+      "editableFrameId": "10:2",
+      "referenceName": "Locked Reference / 01 Home",
+      "editableName": "Editable Reconstruction / 01 Home",
+      "sameSize": true,
+      "logicalSize": { "width": 393, "height": 852 }
+    }
+  ],
+  "assetFills": [
+    {
+      "assetKey": "home-reference",
+      "nodeId": "11:1",
+      "nodeName": "Bitmap Media / 01 Home / full-reference",
+      "fillType": "IMAGE",
+      "scaleMode": "FIT",
+      "hasImageHash": true
+    },
+    {
+      "assetKey": "home-hero",
+      "nodeId": "11:2",
+      "nodeName": "Bitmap Media / 01 Home / hero-card",
+      "fillType": "IMAGE",
+      "scaleMode": "FILL",
+      "hasImageHash": true
+    }
+  ],
+  "components": [
+    { "name": "Component / Bottom Nav", "kind": "navigation" },
+    { "name": "Component / Metric Card", "kind": "card" }
+  ],
+  "icons": [
+    { "key": "tab-home", "source": "vector", "status": "pass" }
+  ],
+  "layerEditability": {
+    "fullScreenScreenshotUsedAsVisible": false,
+    "textLayerCount": 12,
+    "vectorIconCount": 5,
+    "bitmapMediaCount": 2
+  },
+  "warnings": []
+}

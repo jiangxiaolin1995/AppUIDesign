@@ -5,6 +5,11 @@ Use this before presenting a mobile app UI design as ready.
 ## Product Fit
 
 - The target platform and design posture are explicit.
+- A design source package exists before final image generation when the output may become Figma.
+- The design source package status is explicit: `source-package-ready`, `visual-exploration-only`, `figma-blocked`, or `figma-ready-with-assumptions`.
+- The design source package includes screen contract, layout blueprint, typography tokens, spacing/radius tokens, component contract, icon contract, asset contract, image generation contract, and Figma reconstruction contract.
+- For Figma-bound work, a source asset pack exists before Figma reconstruction: full-screen references, clean media files, custom icon sheet or vector icon contract, and asset manifest.
+- The asset manifest maps each file to a Figma node name, crop mode, focal point, radius, overlay split, and verification status.
 - A production brief exists for visual work and includes industry classification, screen scope, navigation model, component inventory, asset inventory, icon inventory, layer plan, output route, and acceptance criteria.
 - The production brief includes an icon pipeline plan and a visual difference plan.
 - If a prototype was provided, prototype constraints are listed: must-preserve, may-improve, must-not-change, and usability overrides.
@@ -42,6 +47,8 @@ Use this before presenting a mobile app UI design as ready.
 ## Layout
 
 - Safe areas, home indicator, status bar, host-app chrome, and fold/cutout constraints are handled.
+- Major regions have planned rectangles or constraints before final image generation.
+- Typography sizes, line heights, and text boxes are defined before Figma reconstruction.
 - Spacing follows a consistent scale.
 - Text does not overlap, truncate unexpectedly, or rely on viewport-scaled font sizes.
 - Dense content remains scannable on a small phone.
@@ -69,6 +76,8 @@ Use this before presenting a mobile app UI design as ready.
 
 - The chosen fidelity route matches the request: Image first for visual design, Figma for editable design handoff, HTML for interaction/implementation.
 - Image generation was guided by a production brief, not only by a visual prompt.
+- Final image generation was guided by the design source package, including layout blueprint, typography, spacing, components, icons, and asset contracts.
+- The result is not called Figma-ready if the source package is missing or materially incomplete.
 - Custom icons, tab glyphs, brand marks, mascots, badges, and stickers have either a vector plan, source crop, or companion asset sheet.
 - Standard control icons use vector/icon-library sources unless a documented source-raster crop is required.
 - Raster design images use a standard vertical phone aspect ratio, not square/landscape/collage output.
@@ -77,10 +86,15 @@ Use this before presenting a mobile app UI design as ready.
 - Prototype placeholders have been converted into real mobile components and realistic content.
 - Image placeholders that materially affect quality have been replaced with generated or sourced bitmap assets.
 - Project-bound generated images are saved in the workspace and referenced from the design artifact.
+- Figma-bound media assets were generated or saved separately without baked UI labels/buttons/icons unless explicitly documented.
+- Figma-bound full-screen references are ready to be used as locked originals, not as final visible editable screens.
+- The source asset pack lists any missing or weak assets as `asset-pack-partial` or `asset-pack-blocked`.
 - Food, product, people, place, cover, and media thumbnails look credible at mobile size.
 - Hero/background images fill their intended container and use appropriate crop/focal point instead of sitting as small centered images.
 - Text and controls over images have contrast protection such as gradient, scrim, blur plate, or safe placement.
 - Images use proportional scaling; no accidental stretching, letterboxing, or layout jump.
+- Detail images such as thumbnails, avatars, product shots, maps, editor canvases, generated results, and small illustrations pass the crop quality gate: same source, correct focal point, enough bleed, correct mask/radius, and no wrong replacement image.
+- Media crops do not contain baked UI labels, chips, buttons, or icons that should be editable, unless the exception is documented.
 - The style posture matches the inferred industry rather than a generic trendy mobile style.
 - Density, color/material, imagery/media, and motion intensity are explicitly chosen.
 - High-trust flows use restrained visuals, explicit copy, and confirmation before risky actions.
@@ -96,10 +110,14 @@ Use this before presenting a mobile app UI design as ready.
 
 - The handoff uses the correct fidelity label: `design image`, `editable draft`, `high-fidelity editable`, or `pixel-faithful`.
 - The visual diff level is stated: manual visual check, region checklist, or pixel diff.
+- Each image-to-Figma screen has a left/right pair: `Locked Reference / {screen}` on the left and `Editable Reconstruction / {screen}` on the right, with identical logical phone size.
+- The locked reference frame contains the approved full-screen PNG and is not used as the final visible editable design.
 - If the user asked to convert a generated design image into Figma, the approved raster screen exists in the file only as a locked reference, not as the final visible deliverable.
 - The final visible phone frame is assembled from movable Figma materials: component instances, editable text, vector icons, shapes, masks, and separate bitmap crops.
+- The Figma reconstruction follows the design source package instead of inventing new layout, icon metaphors, text sizes, or media crops during implementation.
 - A Figma component system or component ledger exists for repeated UI.
 - Repeated UI is abstracted into components or reusable grouped patterns: navigation, tab bars, cards, buttons, chips, metric modules, charts, toolbars, and list rows.
+- Component instances preserve measured rectangles. Fixed wrappers, clipping, text boxes, icon hit areas, media slots, and badge anchors do not shift when selected, edited, or replaced.
 - Photo, food, product, portrait, canvas, and generated-result regions reuse original assets or crops as independent movable bitmap nodes with correct crop, radius, scrim, and focal point.
 - No flattened full-screen screenshot is presented as the editable Figma design.
 - A Figma screenshot has been compared with the approved image for layout, crop, color, spacing, typography hierarchy, icon placement, and mobile chrome.
@@ -107,9 +125,13 @@ Use this before presenting a mobile app UI design as ready.
 - Any region that remains bitmap-backed is named honestly and can still be moved, resized, or replaced as a separate layer.
 - A layer classification exists before reconstruction: layout, editable text, vector/icon, bitmap media, bitmap composite, effect, and system chrome.
 - Photos, avatars, covers, product images, food photos, editor canvases, maps, and generated results have not been replaced with different images during reconstruction.
+- Every media node listed in the asset manifest has a verified `IMAGE` fill, expected crop mode, mask/radius, and no grey/gradient placeholder.
+- Standard icons are vector/component layers; custom icons come from a clean icon sheet, exact crop, or documented vector rebuild.
 - If the output is called `1:1`, the fidelity ledger states what comparison was performed and lists any remaining acceptable differences.
 - The Figma JS is detailed enough to audit: constants/tokens are declared, helper functions are used, every node has role-based naming, image nodes expose asset keys, and the script returns page/frame/image/component/icon/warning metadata.
 - The bottom tab and toolbar icons are semantic vector/icon assets or source crops, not placeholder circles. Any temporary icon placeholder is recorded as a warning and not called final.
+- Every important icon passes the icon fidelity gate: semantic role, expected glyph, source, state, size, stroke/fill, optical center, active/inactive color, and badge anchor match the reference.
+- The tab bar does not reuse one generic icon for different destinations, and no final high-fidelity layer remains named as a placeholder icon.
 - Badges/counts are separate layers and attach to the correct icon region.
 
 ## Accessibility

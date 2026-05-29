@@ -83,6 +83,20 @@ Avoid auto layout when exact raster fidelity depends on manually tuned positions
 - Dense visual cards copied from a raster source.
 - Irregular collage layouts.
 
+## Measured Instance Geometry
+
+Reusable components do not remove the need for measured placement. For image-to-Figma reconstruction, each component instance must keep the approved screen's measured rectangle.
+
+- Store or document each instance's `x`, `y`, `w`, `h`, parent, state, and source measurement id.
+- Use fixed-size wrappers for cards, bottom nav items, toolbar buttons, icon hit areas, media slots, and metric cells when the reference has fixed geometry.
+- Use auto layout inside the fixed wrapper only when it does not change the outer rectangle.
+- Set text boxes to measured widths and line heights. Long labels should wrap or clip intentionally instead of expanding the parent.
+- Keep media slots fixed with `cover` or `contain` behavior documented; replacing the image must not move the card or resize neighboring layers.
+- Anchor badges to the icon/avatar slot inside the measured wrapper.
+- Do not create a clean component master whose default padding makes the instance drift away from the locked reference.
+
+If a component instance differs from its master to match the reference, record the override in the component ledger. Fidelity wins over a tidy master during 1:1 reconstruction.
+
 ## Component Construction Rules
 
 - Build component surfaces first: card, row, button, nav surface.
@@ -131,10 +145,10 @@ Canvas must stay dominant; toolbar should not steal focus from the edited conten
 ```md
 # Component Ledger
 
-| component | screen | instances | variants/states | layer strategy | notes |
-| --- | --- | --- | --- | --- | --- |
-| Bottom Nav | all main screens | 3 | selected/default/badge | grouped editable layers | icons are vector |
-| Feed Card | home | 6 | default/loading | component-like group | media is bitmap crop |
+| component | screen | instances | variants/states | measured geometry | layer strategy | notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| Bottom Nav | all main screens | 3 | selected/default/badge | fixed frame + tab hit areas | grouped editable layers | icons are vector |
+| Feed Card | home | 6 | default/loading | fixed card wrapper + media slot | component-like group | media is bitmap crop |
 ```
 
 ## Figma JS Requirements
@@ -147,6 +161,8 @@ Detailed Figma JS should:
   - `classification=component`
   - `componentName`
   - `states`
+  - `measurementId`
+  - `layoutStability=checked|warning|fail`
   - `source=generated/rebuilt/imported`
 - Use semantic function names such as `createBottomNav`, `createFeedCard`, `createFormRow`, `createEditorToolbar`.
 - Avoid copying a block of rectangle/text creation code five times for repeated elements.
@@ -158,5 +174,7 @@ Detailed Figma JS should:
 - States are documented.
 - Icons, text, and media are independent child layers.
 - Bitmap-backed regions are limited to media/composite areas.
+- Component instances preserve measured x/y/w/h and do not reflow outside the reference rectangle.
+- Fixed wrappers, clipping, text boxes, image slots, icon centers, and badge anchors are checked.
 - Figma JS returns component inventory.
 - Any missing formal component variants are clearly labeled as grouped components, not hidden.
