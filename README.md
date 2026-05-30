@@ -76,13 +76,18 @@
 ```text
 .
 ├── AGENTS.md
+├── CHANGELOG.md
 ├── README.md
 ├── SKILL.md
 ├── examples/
 │   ├── asset-manifest.example.json
 │   ├── crop-spec.example.json
 │   ├── figma-audit.example.json
+│   ├── measurement-crop-spec.example.json
+│   ├── measurement-regions.example.json
+│   ├── measurement-sample-screen.svg
 │   └── regions.example.json
+├── package-lock.json
 ├── package.json
 ├── scripts/
 │   ├── build-figma-packet.js

@@ -5,8 +5,13 @@
 ```text
 AppUIDesign/
 ├── AGENTS.md
+├── CHANGELOG.md
 ├── README.md
 ├── SKILL.md
+├── examples/
+├── package.json
+├── scripts/
+├── templates/
 └── references/
     ├── industry/
     ├── research/
@@ -17,12 +22,13 @@ AppUIDesign/
 
 - `SKILL.md`：Skill 入口，定义移动 App UI 设计的触发条件、主流程、输出要求和 Figma 交付规则。
 - `README.md`：面向 GitHub 的能力说明、安装使用、缺口判断和文件结构。
+- `CHANGELOG.md`：按日期记录 Skill 能力变更，方便判断 GitHub 版本和本机版本是否同步。
 - `references/industry/`：行业分类、风格决策、页面/组件模式映射。
 - `references/research/`：外部设计规范、平台原则、图片规范和资料来源。
 - `references/workflow/`：原型约束、生产 brief、图片生成、图标管线、组件系统、Figma 重建、视觉差异检查、状态矩阵、多屏一致性、交付包和验收清单。
-- `scripts/`：可执行辅助工具，目前包括截图测量、图片裁切导出和视觉 diff。
-- `templates/`：可复制的 Figma JS 重建模板。
-- `examples/`：脚本输入示例，例如 crop spec 和 diff region spec。
+- `scripts/`：可执行辅助工具，目前包括截图测量、图片裁切导出、视觉 diff、asset manifest 校验、Figma packet 生成、Figma audit 校验和资料链接检查。
+- `templates/`：可复制的 Figma JS 重建模板和 source asset pack prompt 模板。
+- `examples/`：脚本输入示例，例如 crop spec、diff region spec、asset manifest、Figma audit 和 measurement 示例。
 
 ## 决策
 
