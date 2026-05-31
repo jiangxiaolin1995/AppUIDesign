@@ -33,6 +33,12 @@ const imageHashes = {
   "home-hero": ""
 };
 
+// Optional measurement annotation spec. Use this when the user asks for
+// spacing labels on the image, or when the Figma handoff should include
+// implementation measurements. Keep the measurement overlay separate from the
+// clean editable reconstruction frame.
+const MEASUREMENT_ANNOTATIONS = null;
+
 const ICONS = [
   { key: "home", label: "Home", source: "vector", required: true },
   { key: "search", label: "Search", source: "vector", required: true },
@@ -175,6 +181,98 @@ function text(name, value, x, y, size, color = SPEC.color.text, font = SPEC.font
   return node;
 }
 
+function measurementText(name, value, x, y, size = 11, width = null, color = "#FF2B20") {
+  const node = figma.createText();
+  node.name = name;
+  node.fontName = SPEC.font.medium;
+  node.characters = value;
+  node.fontSize = size;
+  node.lineHeight = { unit: "PIXELS", value: Math.round(size * 1.35) };
+  node.fills = [solid(color)];
+  node.x = x;
+  node.y = y;
+  if (width) {
+    node.textAutoResize = "HEIGHT";
+    node.resize(width, node.height);
+  }
+  tag(node, "measurement-text");
+  return node;
+}
+
+function addMeasurementLabel(parent, label, x, y) {
+  const bg = rect(`Measurement Label BG / ${label}`, x - 4, y - 3, Math.max(34, label.length * 7 + 8), 18, "#FFFFFF", 5);
+  bg.fills = [solid("#FFFFFF", 0.9)];
+  tag(bg, "measurement-label-bg");
+  append(parent, bg);
+  return append(parent, measurementText(`Measurement Label / ${label}`, label, x, y, 11, null, "#FF2B20"));
+}
+
+function addMeasurementLine(parent, annotation) {
+  const r = annotation.rect || { x: 0, y: 0, width: 0, height: 0 };
+  const line = figma.createLine();
+  line.name = `Measurement / ${annotation.id}`;
+  line.x = r.x;
+  line.y = r.y;
+  if (annotation.orientation === "vertical") line.resize(0, r.height || Number(annotation.value) || 1);
+  else line.resize(r.width || Number(annotation.value) || 1, 0);
+  line.strokes = [solid("#FF2B20")];
+  line.strokeWeight = 1;
+  tag(line, "measurement-guide", annotation);
+  append(parent, line);
+
+  if (annotation.type === "size" && r.width && r.height) {
+    const box = rect(`Measurement Box / ${annotation.id}`, r.x, r.y, r.width, r.height, "#FFFFFF", 0);
+    box.fills = [];
+    box.strokes = [solid("#FF2B20")];
+    box.strokeWeight = 1;
+    tag(box, "measurement-box", annotation);
+    append(parent, box);
+  }
+
+  addMeasurementLabel(parent, annotation.label || String(annotation.value), r.labelX ?? r.x + Math.max(4, (r.width || 1) / 2), r.labelY ?? r.y - 18);
+  return line;
+}
+
+function measurementSpecForScreen(screen) {
+  if (!MEASUREMENT_ANNOTATIONS) return null;
+  if (MEASUREMENT_ANNOTATIONS.screens) {
+    return MEASUREMENT_ANNOTATIONS.screens.find((item) => item.screen?.id === screen.id || item.screen?.name === screen.name || item.id === screen.id || item.name === screen.name) || null;
+  }
+  if (MEASUREMENT_ANNOTATIONS.screen?.id === screen.id || MEASUREMENT_ANNOTATIONS.screen?.name === screen.name) return MEASUREMENT_ANNOTATIONS;
+  return MEASUREMENT_ANNOTATIONS;
+}
+
+function buildMeasurementHandoff(page, screenName, spec, x, y, width, height) {
+  if (!spec) return null;
+  const overlay = figma.createFrame();
+  overlay.name = `Measurement Overlay / ${screenName}`;
+  overlay.x = x;
+  overlay.y = y;
+  overlay.resize(width, height);
+  overlay.fills = [solid("#FFFFFF", 0.02)];
+  overlay.clipsContent = false;
+  tag(overlay, "measurement-overlay", { screenName, width, height });
+  page.appendChild(overlay);
+
+  for (const annotation of spec.annotations || []) addMeasurementLine(overlay, annotation);
+
+  const panel = measurementText(`Measurement JSON / ${screenName}`, JSON.stringify(spec, null, 2), x + width + 40, y, 11, 380, "#334155");
+  tag(panel, "measurement-json", { screenName });
+  page.appendChild(panel);
+  audit.frames[`Measurement Overlay / ${screenName}`] = overlay.id;
+  audit.frames[`Measurement JSON / ${screenName}`] = panel.id;
+  audit.measurementAnnotations = audit.measurementAnnotations || [];
+  audit.measurementAnnotations.push({
+    screen: screenName,
+    overlayFrameId: overlay.id,
+    jsonNodeId: panel.id,
+    count: (spec.annotations || []).length,
+    unit: spec.screen?.unit || spec.unit || "px",
+    confidence: spec.screen?.measurementConfidence || spec.measurementConfidence || "unspecified"
+  });
+  return { overlay, panel };
+}
+
 function lineIcon(name, strokes) {
   const group = figma.group(strokes, figma.currentPage);
   group.name = `Component / Icon / ${name}`;
@@ -312,6 +410,8 @@ function buildScreenPairFromManifest(page, screen, x, y) {
     sameSize: ref.width === editable.width && ref.height === editable.height,
     logicalSize: size
   });
+  const measurementSpec = screen.measurementAnnotations || measurementSpecForScreen(screen);
+  if (measurementSpec) buildMeasurementHandoff(page, screen.name, measurementSpec, x + (size.width + 40) * 2, y, size.width, size.height);
   return { ref, editable };
 }
 
@@ -356,6 +456,7 @@ if (DESIGN_MANIFEST?.screens?.length) {
 } else {
   reference = lockedReference(page, "home-reference", "Home", 120, 120);
   editable = editableHome(page, 120 + SPEC.frame.width + 40, 120);
+  if (MEASUREMENT_ANNOTATIONS) buildMeasurementHandoff(page, "Home", MEASUREMENT_ANNOTATIONS, 120 + (SPEC.frame.width + 40) * 2, 120, SPEC.frame.width, SPEC.frame.height);
   audit.referencePairs.push({
     screen: "Home",
     referenceFrameId: reference.id,

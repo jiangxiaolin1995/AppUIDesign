@@ -6,6 +6,7 @@ Use this file when converting generated mobile design images into Figma. The goa
 
 - The approved raster screen is a locked reference only.
 - The final visible phone frame is rebuilt from movable Figma materials.
+- Measurement guides, spacing labels, and JSON specs live in separate handoff frames/panels. They must not be drawn into the clean editable phone frame.
 - UI copy is editable text.
 - Icons are vector nodes or component instances.
 - Repeated UI is componentized: cards, buttons, chips, tabs, toolbars, bottom bars, metric modules, chart blocks.
@@ -102,6 +103,109 @@ return {
   frameSize: `${W}x${H}`,
   rule: "Do not replace the editable screen with a full-screen screenshot."
 };
+```
+
+## Template 1A: Measurement Overlay And JSON Panel
+
+Use this when the user asks for spacing labels or when a reconstruction needs a visible measurement handoff in Figma.
+
+```js
+const measurementFont = { family: "Inter", style: "Medium" };
+await figma.loadFontAsync(measurementFont);
+
+const measurementSpec = {
+  screen: {
+    id: "01-import-safety",
+    name: "未准入境商品",
+    unit: "px",
+    basis: "logical-figma-frame",
+    measurementConfidence: "approximate"
+  },
+  annotations: [
+    {
+      id: "page.margin.left",
+      label: "30px",
+      type: "spacing",
+      value: 30,
+      orientation: "horizontal",
+      rect: { x: 0, y: 142, width: 30, height: 1 }
+    }
+  ]
+};
+
+function annotationPaint(hex, opacity = 1) {
+  const value = Number.parseInt(hex.replace("#", ""), 16);
+  return {
+    type: "SOLID",
+    color: {
+      r: ((value >> 16) & 255) / 255,
+      g: ((value >> 8) & 255) / 255,
+      b: (value & 255) / 255
+    },
+    opacity
+  };
+}
+
+function addMeasurementLabel(parent, label, x, y) {
+  const bg = figma.createRectangle();
+  bg.name = `Measurement Label BG / ${label}`;
+  bg.x = x - 4;
+  bg.y = y - 3;
+  bg.resize(Math.max(36, label.length * 7 + 8), 18);
+  bg.cornerRadius = 5;
+  bg.fills = [annotationPaint("#FFFFFF", 0.88)];
+  parent.appendChild(bg);
+
+  const text = figma.createText();
+  text.name = `Measurement Label / ${label}`;
+  text.fontName = measurementFont;
+  text.fontSize = 11;
+  text.lineHeight = { unit: "PIXELS", value: 14 };
+  text.fills = [annotationPaint("#FF2B20")];
+  text.characters = label;
+  text.x = x;
+  text.y = y;
+  parent.appendChild(text);
+  return text;
+}
+
+function addMeasurementLine(parent, annotation) {
+  const r = annotation.rect;
+  const line = figma.createLine();
+  line.name = `Measurement / ${annotation.id}`;
+  line.x = r.x;
+  line.y = r.y;
+  line.resize(annotation.orientation === "vertical" ? 0 : r.width, annotation.orientation === "vertical" ? r.height : 0);
+  line.strokes = [annotationPaint("#FF2B20")];
+  line.strokeWeight = 1;
+  parent.appendChild(line);
+  addMeasurementLabel(parent, annotation.label, r.x + Math.max(4, r.width / 2), r.y - 18);
+  return line;
+}
+
+function addMeasurementPanel(page, x, y, width, height, spec) {
+  const overlay = figma.createFrame();
+  overlay.name = `Measurement Overlay / ${spec.screen.name}`;
+  overlay.x = x;
+  overlay.y = y;
+  overlay.resize(width, height);
+  overlay.fills = [annotationPaint("#FFFFFF", 0.02)];
+  overlay.clipsContent = false;
+  page.appendChild(overlay);
+  for (const annotation of spec.annotations) addMeasurementLine(overlay, annotation);
+
+  const panel = figma.createText();
+  panel.name = `Measurement JSON / ${spec.screen.name}`;
+  panel.fontName = measurementFont;
+  panel.fontSize = 11;
+  panel.lineHeight = { unit: "PIXELS", value: 15 };
+  panel.characters = JSON.stringify(spec, null, 2);
+  panel.x = x + width + 40;
+  panel.y = y;
+  panel.resize(360, Math.min(760, panel.height));
+  page.appendChild(panel);
+  return { overlay, panel };
+}
 ```
 
 ## Template 2: Component Kit Seeds

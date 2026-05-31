@@ -35,3 +35,15 @@ npm run check:scripts
 npm run check:examples
 rg -n "temporary placeholder markers" .
 ```
+
+## 2026-05-31
+
+### Added
+
+- Measurement annotation handoff for image-to-Figma work: spacing/size labels can now be represented as structured JSON and as a separate `Measurement Overlay / {screen}` frame in Figma.
+- `Measurement JSON / {screen}` spec panel support in the Figma reconstruction template, keeping annotation data visible and copyable in the Figma file.
+- Example measurement annotation schema at `examples/measurement-annotations.example.json`.
+
+### Changed
+
+- Image-to-Figma reconstruction now keeps three concerns separate: locked source image, clean editable reconstruction, and measurement annotation handoff.

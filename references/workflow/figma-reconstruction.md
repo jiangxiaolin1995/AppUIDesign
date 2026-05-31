@@ -123,6 +123,76 @@ Recommended tolerances for editable reconstruction:
 
 Any geometry drift above tolerance is a `major` issue unless intentionally documented.
 
+## Measurement Annotation Overlay And JSON
+
+When the user asks to "标注间距", "把数字放图上", "产出 JSON", or when a Figma reconstruction needs explicit implementation measurements, create a measurement annotation deliverable in addition to the clean editable reconstruction.
+
+Figma structure:
+
+```text
+Locked Reference / 01 Screen
+Editable Reconstruction / 01 Screen
+Measurement Overlay / 01 Screen
+Measurement JSON / 01 Screen
+```
+
+Rules:
+
+- `Measurement Overlay / ...` is a same-size frame used for screenshot communication. It may show red/blue guide lines, bracket ticks, and compact labels such as `30px`, `Nav 88px`, or `Button 330 x 96px`.
+- `Measurement JSON / ...` is a separate text/spec panel containing the same values in structured JSON. This panel is for implementation, review, and later Figma JS updates.
+- Do not draw measurement guides inside the final `Editable Reconstruction / ...` frame. The clean UI must stay usable as a design source.
+- The overlay and JSON must share the same ids. If the overlay has `bottom_actions.button_gap`, the JSON must contain the same key and value.
+- Record the unit and basis: source raster px, logical Figma px, scale factor, or visual-estimate. If values are estimated from a screenshot, mark `measurementConfidence: "visual-estimate"` or `measurementConfidence: "approximate"`.
+- Include both section-level sizes and gaps: safe areas, nav height, content margins, hero/card size, module gaps, row/card height, repeated spacing, badge sizes, CTA sizes, and bottom safe area.
+
+Recommended JSON shape:
+
+```json
+{
+  "screen": {
+    "id": "01-import-safety",
+    "name": "未准入境商品",
+    "unit": "px",
+    "basis": "logical-figma-frame",
+    "measurementConfidence": "approximate"
+  },
+  "annotations": [
+    {
+      "id": "page.margin.left",
+      "label": "30px",
+      "type": "spacing",
+      "value": 30,
+      "orientation": "horizontal",
+      "from": "screen.left",
+      "to": "content.left",
+      "rect": { "x": 0, "y": 142, "width": 30, "height": 1 }
+    },
+    {
+      "id": "bottom_actions.primary.size",
+      "label": "330 x 96px",
+      "type": "size",
+      "value": { "width": 330, "height": 96 },
+      "target": "Component / Bottom Action / primary",
+      "rect": { "x": 48, "y": 1700, "width": 330, "height": 96 }
+    }
+  ],
+  "groups": {
+    "safe_area": { "top_safe": 24, "bottom_safe": 34 },
+    "navigation": { "nav_height": 88 },
+    "page_margin": { "left": 30, "right": 30 },
+    "bottom_actions": { "button_width": 330, "button_height": 96, "button_gap": 22 }
+  }
+}
+```
+
+Overlay drawing rules:
+
+- Use annotation layers named `Measurement / {id}`.
+- Keep labels compact and high contrast, usually red guide lines with a small white label backing.
+- Put labels outside dense text where possible. If the screenshot is crowded, use short ids in the overlay and put the full explanation in JSON.
+- If a measurement is estimated, include `~` in the overlay label or mark `estimated: true` in JSON.
+- When exporting a screenshot for communication, use the measurement overlay frame, not the clean editable frame.
+
 ## Detail Media Fidelity Protocol
 
 Use this protocol for every detail image, not only large heroes. Small media is often where a reconstruction stops looking like the approved design.
@@ -192,6 +262,8 @@ Every image-to-Figma conversion must contain:
 
 - Locked reference frame: the full approved screen image at the same logical frame size.
 - Editable reconstruction frame: the visible deliverable, rebuilt from layers.
+- Measurement overlay frame when spacing labels are requested or useful: same logical size, visible guides/labels, and separate from the clean editable UI.
+- Measurement JSON/spec panel when an overlay exists: a structured text block with the same ids and values used by the overlay.
 - Component kit or reusable groups: navigation, tabs, chips, cards, buttons, lists, metrics, editor tools, sheets, and repeated content modules.
 - Icon inventory and batch ledger: one explicit row for every tab icon, toolbar icon, action icon, badge, empty-state icon, and custom glyph. Each row states the batch, state, source, asset file if bitmap-backed, target node, optical center, and badge anchor.
 - Bitmap crop assets: one separate image node for each photo, media thumbnail, avatar, editor canvas, generated result, product shot, cover, or complex illustration region.

@@ -89,7 +89,47 @@
           "weight": 700,
           "color": "#111827"
         }
-      ]
+      ],
+      "measurementAnnotations": {
+        "screen": {
+          "id": "01-home",
+          "name": "01 Home",
+          "unit": "px",
+          "basis": "logical-figma-frame",
+          "measurementConfidence": "example"
+        },
+        "annotations": [
+          {
+            "id": "safe_area.top",
+            "label": "Top safe 24px",
+            "type": "spacing",
+            "value": 24,
+            "orientation": "vertical",
+            "rect": { "x": 196, "y": 0, "width": 0, "height": 24, "labelX": 210, "labelY": 6 }
+          },
+          {
+            "id": "page.margin.left",
+            "label": "24px",
+            "type": "spacing",
+            "value": 24,
+            "orientation": "horizontal",
+            "rect": { "x": 0, "y": 146, "width": 24, "height": 0, "labelX": 4, "labelY": 126 }
+          },
+          {
+            "id": "hero_card.size",
+            "label": "345 x 128px",
+            "type": "size",
+            "value": { "width": 345, "height": 128 },
+            "target": "Bitmap Media / 01 Home / hero-card",
+            "rect": { "x": 24, "y": 146, "width": 345, "height": 128, "labelX": 132, "labelY": 126 }
+          }
+        ],
+        "groups": {
+          "safe_area": { "top_safe": 24, "bottom_safe": 34 },
+          "page_margin": { "left": 24, "right": 24 },
+          "hero_card": { "width": 345, "height": 128 }
+        }
+      }
     }
   ]
 }

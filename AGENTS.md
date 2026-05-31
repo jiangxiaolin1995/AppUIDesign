@@ -34,7 +34,7 @@ AppUIDesign/
 
 仓库根目录即 Skill 根目录，`SKILL.md` 必须保持在根上。参考资料按研究、行业、流程三类拆分，避免单层目录过载。大厂规范只作为尺寸、密度、组件一致性、图片裁切和平台约束的判断来源，不作为视觉风格照搬对象。设计图、高保真和 Figma 输出前必须做 UI Notes Pin + 美叶灵感集的模式提炼。
 
-Figma 输出默认要求可编辑且尽量 1:1：整屏图只能做参考，最终稿必须由可移动素材、独立 bitmap crop、矢量图标、文本层和组件组成，并通过视觉差异检查。不能用圆点代替正式图标。生成图片时就要同步规划 Figma 分层、图标来源、图片裁切、组件边界、状态矩阵和交付包。
+Figma 输出默认要求可编辑且尽量 1:1：整屏图只能做参考，最终稿必须由可移动素材、独立 bitmap crop、矢量图标、文本层和组件组成，并通过视觉差异检查。不能用圆点代替正式图标。生成图片时就要同步规划 Figma 分层、图标来源、图片裁切、组件边界、状态矩阵和交付包。若用户需要间距/尺寸标注，标注层和 measurement JSON 必须作为独立 handoff frame/spec panel 加进 Figma，不能画进干净的可编辑 UI 里。
 
 重复性工作优先沉淀为脚本或模板：截图/参考图测量使用 `scripts/measure-screenshot.js`，图片裁切使用 `scripts/export-crops.js`，视觉差异检查使用 `scripts/visual-diff.js`，Figma 可编辑重建从 `templates/figma-reconstruction.js` 开始，再保存项目自己的 `figma/figma-build-script.js`。
 
