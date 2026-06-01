@@ -65,7 +65,8 @@ const audit = {
     vectorIconCount: 0,
     bitmapMediaCount: 0
   },
-  layerCounts: {}
+  layerCounts: {},
+  coordinateSources: []
 };
 
 await Promise.all([
@@ -242,6 +243,63 @@ function measurementSpecForScreen(screen) {
   return MEASUREMENT_ANNOTATIONS;
 }
 
+function measurementContractForScreen(screen) {
+  return screen.measurementAnnotations || measurementSpecForScreen(screen);
+}
+
+function measurementItems(spec) {
+  if (!spec) return [];
+  return [...(spec.elements || []), ...(spec.annotations || [])];
+}
+
+function findMeasurementItem(spec, key) {
+  if (!key) return null;
+  return measurementItems(spec).find((item) => item.id === key || item.target === key || item.targetNode === key) || null;
+}
+
+function normalizeRect(rectValue) {
+  if (!rectValue) return null;
+  return {
+    x: Number(rectValue.x || 0),
+    y: Number(rectValue.y || 0),
+    width: Number(rectValue.width ?? rectValue.w ?? 0),
+    height: Number(rectValue.height ?? rectValue.h ?? 0)
+  };
+}
+
+function measuredRect(screen, item, fallbackRect = null) {
+  const spec = measurementContractForScreen(screen);
+  const keys = [item.measurementRef, item.id, item.targetNode, item.target].filter(Boolean);
+  for (const key of keys) {
+    const found = findMeasurementItem(spec, key);
+    const rectValue = normalizeRect(found?.rect);
+    if (rectValue) {
+      audit.coordinateSources.push({
+        node: item.targetNode || item.target || item.id,
+        measurementRef: found.id,
+        rectSource: "measurement-elements",
+        rect: rectValue
+      });
+      return rectValue;
+    }
+  }
+
+  if (item.measurementRef || item.measurementRequired) {
+    audit.warnings.push(`Missing measured rect for ${screen.id}/${item.id || item.targetNode || item.target}; using fallback rect.`);
+  }
+
+  const fallback = normalizeRect(fallbackRect || item.rect);
+  if (fallback) {
+    audit.coordinateSources.push({
+      node: item.targetNode || item.target || item.id,
+      measurementRef: item.measurementRef || null,
+      rectSource: item.measurementRef ? "fallback-after-missing-measurement" : "manifest-rect",
+      rect: fallback
+    });
+  }
+  return fallback;
+}
+
 function buildMeasurementHandoff(page, screenName, spec, x, y, width, height) {
   if (!spec) return null;
   const overlay = figma.createFrame();
@@ -365,12 +423,14 @@ function mediaFromManifest(parent, screen, region) {
     return null;
   }
   ASSETS[asset.id] = { role: assetRole(asset), description: asset.overlaySplit || asset.kind };
-  const r = region.rect;
+  const r = measuredRect(screen, region, region.rect);
+  if (!r) return null;
   return append(parent, media(`${screen.name} / ${region.id}`, asset.id, r.x, r.y, r.width, r.height, region.radius || asset.radius || 0, asset.cropMode === "contain" ? "FIT" : "FILL"));
 }
 
 function textFromManifest(parent, screen, item) {
-  const r = item.rect;
+  const r = measuredRect(screen, item, item.rect);
+  if (!r) return null;
   return append(parent, text(`${screen.name} / ${item.id}`, item.text, r.x, r.y, item.fontSize, item.color || SPEC.color.text, item.weight >= 700 ? SPEC.font.bold : item.weight >= 500 ? SPEC.font.medium : SPEC.font.regular, r.width));
 }
 
@@ -393,7 +453,8 @@ function buildScreenPairFromManifest(page, screen, x, y) {
   for (const region of screen.regions || []) {
     if (region.type === "bitmap-media") mediaFromManifest(editable, screen, region);
     if (region.type === "layout" || region.type === "component") {
-      const r = region.rect;
+      const r = measuredRect(screen, region, region.rect);
+      if (!r) continue;
       append(editable, rect(region.targetNode || `Component / ${screen.name} / ${region.id}`, r.x, r.y, r.width, r.height, SPEC.color.surface, region.radius || 0));
       audit.components.push({ name: region.targetNode || region.id, kind: region.type });
     }
@@ -410,7 +471,7 @@ function buildScreenPairFromManifest(page, screen, x, y) {
     sameSize: ref.width === editable.width && ref.height === editable.height,
     logicalSize: size
   });
-  const measurementSpec = screen.measurementAnnotations || measurementSpecForScreen(screen);
+  const measurementSpec = measurementContractForScreen(screen);
   if (measurementSpec) buildMeasurementHandoff(page, screen.name, measurementSpec, x + (size.width + 40) * 2, y, size.width, size.height);
   return { ref, editable };
 }

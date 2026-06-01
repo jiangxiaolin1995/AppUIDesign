@@ -22,6 +22,7 @@
           "id": "hero-card",
           "type": "bitmap-media",
           "targetNode": "Bitmap Media / 01 Home / hero-card",
+          "measurementRef": "hero_card.frame",
           "assetId": "home-hero",
           "rect": { "x": 24, "y": 146, "width": 345, "height": 128 },
           "radius": 20,
@@ -31,6 +32,7 @@
           "id": "metric-row",
           "type": "component",
           "targetNode": "Component / 01 Home / metric-row",
+          "measurementRef": "metric_row.frame",
           "rect": { "x": 24, "y": 288, "width": 345, "height": 72 },
           "radius": 16,
           "strategy": "three metric cards rebuilt from shape, icon, and text layers"
@@ -83,6 +85,7 @@
           "id": "screen-title",
           "text": "今天练什么？",
           "targetNode": "Text / 01 Home / title",
+          "measurementRef": "title.text_box",
           "rect": { "x": 24, "y": 102, "width": 220, "height": 28 },
           "fontSize": 22,
           "lineHeight": 28,
@@ -122,6 +125,31 @@
             "value": { "width": 345, "height": 128 },
             "target": "Bitmap Media / 01 Home / hero-card",
             "rect": { "x": 24, "y": 146, "width": 345, "height": 128, "labelX": 132, "labelY": 126 }
+          }
+        ],
+        "elements": [
+          {
+            "id": "title.text_box",
+            "type": "editable-text",
+            "targetNode": "Text / 01 Home / title",
+            "rect": { "x": 24, "y": 102, "width": 220, "height": 28 },
+            "figmaStrategy": "editable text"
+          },
+          {
+            "id": "hero_card.frame",
+            "type": "bitmap-media",
+            "targetNode": "Bitmap Media / 01 Home / hero-card",
+            "rect": { "x": 24, "y": 146, "width": 345, "height": 128 },
+            "radius": 20,
+            "figmaStrategy": "image fill with editable overlays"
+          },
+          {
+            "id": "metric_row.frame",
+            "type": "component",
+            "targetNode": "Component / 01 Home / metric-row",
+            "rect": { "x": 24, "y": 288, "width": 345, "height": 72 },
+            "radius": 16,
+            "figmaStrategy": "component instances placed from measured rect"
           }
         ],
         "groups": {

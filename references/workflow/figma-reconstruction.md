@@ -125,7 +125,7 @@ Any geometry drift above tolerance is a `major` issue unless intentionally docum
 
 ## Measurement Annotation Overlay And JSON
 
-When the user asks to "标注间距", "把数字放图上", "产出 JSON", or when a Figma reconstruction needs explicit implementation measurements, create a measurement annotation deliverable in addition to the clean editable reconstruction.
+When the user asks to "标注间距", "把数字放图上", "产出 JSON", or when a Figma reconstruction needs explicit implementation measurements, create a measurement coordinate contract in addition to the clean editable reconstruction. The point is not only to annotate the screenshot. The point is to create a pixel source that the Figma script can use to place layers accurately.
 
 Figma structure:
 
@@ -140,10 +140,15 @@ Rules:
 
 - `Measurement Overlay / ...` is a same-size frame used for screenshot communication. It may show red/blue guide lines, bracket ticks, and compact labels such as `30px`, `Nav 88px`, or `Button 330 x 96px`.
 - `Measurement JSON / ...` is a separate text/spec panel containing the same values in structured JSON. This panel is for implementation, review, and later Figma JS updates.
+- `elements[]` is the Figma coordinate contract. It contains the actual measured rectangles for containers, text boxes, icons, media, badges, rows, and controls.
+- `annotations[]` is the visual explanation layer. It contains guide lines and labels for human communication. Do not use annotation-line rectangles as UI node rectangles unless the annotation is explicitly also an element.
 - Do not draw measurement guides inside the final `Editable Reconstruction / ...` frame. The clean UI must stay usable as a design source.
 - The overlay and JSON must share the same ids. If the overlay has `bottom_actions.button_gap`, the JSON must contain the same key and value.
 - Record the unit and basis: source raster px, logical Figma px, scale factor, or visual-estimate. If values are estimated from a screenshot, mark `measurementConfidence: "visual-estimate"` or `measurementConfidence: "approximate"`.
 - Include both section-level sizes and gaps: safe areas, nav height, content margins, hero/card size, module gaps, row/card height, repeated spacing, badge sizes, CTA sizes, and bottom safe area.
+- In the asset manifest or Figma script, reference measured elements by `measurementRef`. If a node has `measurementRef: "search.bar"`, the script should use `elements["search.bar"].rect` for `x/y/width/height`.
+- If both `item.rect` and `measurementRef` exist, `measurementRef` wins unless the script explicitly documents a local override.
+- If `basis` is `source-raster-px`, convert to the target Figma frame with one documented scale before placement. Do not mix source pixels and logical Figma pixels in the same contract.
 
 Recommended JSON shape:
 
@@ -176,6 +181,24 @@ Recommended JSON shape:
       "rect": { "x": 48, "y": 1700, "width": 330, "height": 96 }
     }
   ],
+  "elements": [
+    {
+      "id": "search.bar",
+      "type": "component",
+      "targetNode": "Component / Search Bar",
+      "rect": { "x": 28, "y": 520, "width": 728, "height": 60 },
+      "radius": 30,
+      "figmaStrategy": "shape + editable icon + editable placeholder text"
+    },
+    {
+      "id": "risk_badge.first",
+      "type": "component",
+      "targetNode": "Component / Risk Badge / high",
+      "rect": { "x": 646, "y": 696, "width": 82, "height": 36 },
+      "radius": 18,
+      "figmaStrategy": "shape + editable text"
+    }
+  ],
   "groups": {
     "safe_area": { "top_safe": 24, "bottom_safe": 34 },
     "navigation": { "nav_height": 88 },
@@ -188,10 +211,19 @@ Recommended JSON shape:
 Overlay drawing rules:
 
 - Use annotation layers named `Measurement / {id}`.
+- Use reconstructed UI nodes named from `elements[].targetNode` or from manifest rows that reference `elements[].id`.
 - Keep labels compact and high contrast, usually red guide lines with a small white label backing.
 - Put labels outside dense text where possible. If the screenshot is crowded, use short ids in the overlay and put the full explanation in JSON.
 - If a measurement is estimated, include `~` in the overlay label or mark `estimated: true` in JSON.
 - When exporting a screenshot for communication, use the measurement overlay frame, not the clean editable frame.
+
+Figma JS placement rules:
+
+- Build a lookup map from `elements[]` and `annotations[]`.
+- For UI nodes, read `measurementRef` first and use the referenced element rect.
+- Use `annotations[]` only for measurement guide layers and labels.
+- Record every coordinate source in the audit, for example `{ nodeName, measurementRef, rectSource: "measurement-elements" }`.
+- If a measured element is missing, fail for required UI nodes or mark the node as `coordinate-assumption` in the audit.
 
 ## Detail Media Fidelity Protocol
 

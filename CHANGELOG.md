@@ -47,3 +47,4 @@ rg -n "temporary placeholder markers" .
 ### Changed
 
 - Image-to-Figma reconstruction now keeps three concerns separate: locked source image, clean editable reconstruction, and measurement annotation handoff.
+- Measurement JSON is now defined as a coordinate contract for Figma reconstruction: `elements[].rect` drives layer placement, while `annotations[]` drives visible measurement guides.

@@ -16,7 +16,7 @@
 - **素材包前置**：Figma 前必须准备整屏参考图、无 UI 的干净媒体素材、分批图标素材包或矢量 icon 合同，以及 asset manifest，避免还原时临时找图、换图或出现灰块。
 - **Manifest 驱动 Figma**：用 `asset-manifest` 固定素材、节点名、x/y/w/h、圆角、裁切、icon 和文字框，再生成 Figma JS 输入包，减少布局靠猜。
 - **截图测量前置**：用户给截图或要求还原 Figma 时，先用 `measure-screenshot.js` 生成尺寸、参考线、区域表、间距、颜色采样和标线图，再开始切素材或写 Figma。
-- **标注 JSON 入 Figma**：当需要把图片标注间距/尺寸时，输出同一套 measurement JSON，并在 Figma 里创建独立的 `Measurement Overlay` 标注画板和 `Measurement JSON` 规格文本，不污染干净的可编辑 UI。
+- **像素坐标合同入 Figma**：当需要把图片标注间距/尺寸时，输出 measurement JSON。里面的 `elements[].rect` 是 Figma 放置图层的坐标依据，`annotations[]` 只是可视标线；Figma 里同时创建独立的 `Measurement Overlay` 标注画板和 `Measurement JSON` 规格文本，不污染干净的可编辑 UI。
 - **Figma audit 验收**：Figma 写完后检查左右对照、`IMAGE` fill、可编辑文字/矢量/bitmap 数量和警告，不能只看图层是否存在。
 - **Prompt 模板**：生图时区分 clean media、custom icon sheet、full-screen reference 和 manifest fill-in，不再只写一个整屏风格 prompt。
 - **资料刷新**：外部大厂规范和截图库链接有检查脚本与刷新规则，避免引用失效或过期信息。
@@ -50,11 +50,11 @@
 9. 再写 production brief：screen、asset、icon、state、component、Figma reconstruction、delivery package。
 10. 需要视觉稿时，按 design source package 生成标准手机比例图片。
 11. 需要 Figma 时，先准备 source asset pack：整屏参考图、干净媒体素材、分批 icon asset pack 或矢量 icon 合同、asset manifest。
-12. 对整屏参考图运行 `measure-screenshot.js`，产出 measurement report、overlay、region map 和 scale 记录；如果需要截图沟通间距，则同时产出 measurement annotations JSON。
+12. 对整屏参考图运行 `measure-screenshot.js`，产出 measurement report、overlay、region map 和 scale 记录；如果需要截图沟通间距或 Figma 精确还原，则同时产出 measurement coordinate contract JSON。
 13. 用 `validate-asset-manifest.js` 检查 manifest，再用 `build-figma-packet.js` 生成 Figma JS 输入包。
 14. 把图片作为 source of truth：左侧锁定参考图 + 右侧可编辑重建稿 + 独立图片裁切 + 组件系统。
 15. 用 crop 脚本导出独立图片素材，用 Figma 模板重建可编辑 frame。
-16. 用 `validate-figma-audit.js`、截图、region checklist 和 visual diff 脚本做视觉差异检查；如果创建了 measurement overlay，还要确认 overlay 标签和 JSON 值一致，没对齐就不能声称 1:1。
+16. 用 `validate-figma-audit.js`、截图、region checklist 和 visual diff 脚本做视觉差异检查；如果创建了 measurement overlay，还要确认 overlay 标签和 JSON 值一致，并确认 Figma 节点优先使用 `measurementRef -> elements[].rect`，没对齐就不能声称 1:1。
 
 ## Figma 交付规则
 

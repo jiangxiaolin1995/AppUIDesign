@@ -97,6 +97,71 @@
       "rect": { "x": 398, "y": 1746, "width": 22, "height": 0, "labelX": 400, "labelY": 1722 }
     }
   ],
+  "elements": [
+    {
+      "id": "navigation.bar",
+      "type": "layout",
+      "targetNode": "Component / Navigation Bar",
+      "rect": { "x": 0, "y": 52, "width": 780, "height": 88 },
+      "figmaStrategy": "container and controls placed from measured rect"
+    },
+    {
+      "id": "summary_card.frame",
+      "type": "component",
+      "targetNode": "Component / Summary Card",
+      "rect": { "x": 30, "y": 170, "width": 720, "height": 244 },
+      "radius": 18,
+      "figmaStrategy": "shape layer plus editable metric text and mascot bitmap"
+    },
+    {
+      "id": "category_tabs.frame",
+      "type": "component",
+      "targetNode": "Component / Category Tabs",
+      "rect": { "x": 30, "y": 442, "width": 720, "height": 52 },
+      "radius": 26,
+      "figmaStrategy": "segmented control component"
+    },
+    {
+      "id": "search.bar",
+      "type": "component",
+      "targetNode": "Component / Search Bar",
+      "rect": { "x": 28, "y": 520, "width": 728, "height": 60 },
+      "radius": 30,
+      "figmaStrategy": "shape + editable icon + editable placeholder text"
+    },
+    {
+      "id": "list.row.01",
+      "type": "component",
+      "targetNode": "Component / Product Row / 01",
+      "rect": { "x": 28, "y": 652, "width": 728, "height": 124 },
+      "radius": 18,
+      "figmaStrategy": "row component with editable text, icon, badge, and chevron"
+    },
+    {
+      "id": "risk_badge.first",
+      "type": "component",
+      "targetNode": "Component / Risk Badge / high",
+      "rect": { "x": 646, "y": 696, "width": 82, "height": 36 },
+      "radius": 18,
+      "figmaStrategy": "shape + editable text"
+    },
+    {
+      "id": "bottom_actions.primary",
+      "type": "component",
+      "targetNode": "Component / Bottom Action / photo",
+      "rect": { "x": 48, "y": 1698, "width": 330, "height": 96 },
+      "radius": 18,
+      "figmaStrategy": "button component with bitmap icon and editable labels"
+    },
+    {
+      "id": "bottom_actions.secondary",
+      "type": "component",
+      "targetNode": "Component / Bottom Action / scan",
+      "rect": { "x": 420, "y": 1698, "width": 330, "height": 96 },
+      "radius": 18,
+      "figmaStrategy": "button component with vector icon and editable labels"
+    }
+  ],
   "groups": {
     "safe_area": { "top_safe": 24, "bottom_safe": 34 },
     "navigation": { "nav_height": 88 },
